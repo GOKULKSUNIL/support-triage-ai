@@ -7,7 +7,9 @@ AI-assisted ticket triage and answering for CloudServe Solutions (FDE capstone).
 
 ## Requirements
 
-- Python 3.11
+- Python 3.11. If `python3.11 --version` fails, install it from https://www.python.org/downloads/
+  or with uv: `curl -LsSf https://astral.sh/uv/install.sh | sh && uv python install 3.11`
+  (then open a new terminal).
 - A free Groq API key (https://console.groq.com)
 
 ## Setup
