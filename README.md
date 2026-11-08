@@ -19,3 +19,9 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 cp .env.example .env   # then edit .env and add your key
 ```
+
+Check the model provider is reachable (should print `reply: ready`):
+
+```bash
+python scripts/check_llm.py
+```
