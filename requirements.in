@@ -1,0 +1,44 @@
+# Top-level dependencies. Edit this file, then regenerate the pinned lock with:
+#   uv pip compile requirements.in -o requirements.txt --python-version 3.11
+# requirements.txt is what gets installed; it pins every package exactly.
+
+# Orchestration
+langgraph
+langchain-core
+langchain-text-splitters
+
+# Retrieval
+chromadb
+sentence-transformers
+
+# Model access (Groq and OpenRouter both expose an OpenAI-compatible API)
+openai
+tenacity
+
+# API
+fastapi
+uvicorn
+pydantic
+httpx
+
+# Data and evaluation
+pandas
+numpy
+scikit-learn
+
+# Storage and monitoring
+SQLAlchemy
+prometheus-client
+python-json-logger
+
+# Utilities
+python-dotenv
+requests
+tqdm
+PyYAML
+
+# Testing and quality
+pytest
+pytest-cov
+flake8
+black
