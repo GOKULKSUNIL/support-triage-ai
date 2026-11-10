@@ -377,6 +377,8 @@ starlette==1.10.0
     # via fastapi
 sympy==1.14.0
     # via torch
+tabulate==0.10.0
+    # via -r requirements.in
 tenacity==9.2.1
     # via
     #   -r requirements.in

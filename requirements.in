@@ -25,6 +25,7 @@ httpx
 pandas
 numpy
 scikit-learn
+tabulate        # pandas DataFrame.to_markdown, used by the analysis and metrics reports
 
 # Storage and monitoring
 SQLAlchemy
