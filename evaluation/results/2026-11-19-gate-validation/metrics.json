@@ -1,0 +1,145 @@
+{
+  "input": "data/validation_tickets.json",
+  "started": "2026-11-18T18:49:23Z",
+  "finished": "2026-11-18T19:09:21Z",
+  "version": "fb90bca",
+  "threshold": 0.8,
+  "tickets_in": 80,
+  "results_out": 80,
+  "log_rows": 80,
+  "reconciled": true,
+  "errors": 0,
+  "auto": 46,
+  "escalated": 34,
+  "escalation_rate": 0.425,
+  "escalation_reasons": [
+    [
+      "protected category",
+      11
+    ],
+    [
+      "reply blocked by guardrail",
+      11
+    ],
+    [
+      "has no knowledge-base answer",
+      9
+    ],
+    [
+      "no knowledge-base article matched closely enough to answer",
+      2
+    ],
+    [
+      "the drafted reply could not be used",
+      1
+    ]
+  ],
+  "priority": {
+    "P3": 26,
+    "P2": 4,
+    "P1": 4
+  },
+  "protected": 11,
+  "latency_p50_ms": 16592.5,
+  "latency_p95_ms": 25350.199999999997,
+  "sent": 46,
+  "reply_outcomes": {
+    "sent": 46,
+    "blocked": 11,
+    "insufficient": 1
+  },
+  "blocked": 11,
+  "guardrail_failures": {
+    "grounding": 11
+  },
+  "cached_calls": 11,
+  "llm_calls": 149,
+  "labelled": 80,
+  "intent_report": "                         precision    recall  f1-score   support\n\n         account_access      1.000     1.000     1.000         4\n          api_key_issue      1.000     1.000     1.000         6\n     api_usage_question      1.000     1.000     1.000         4\n authentication_failure      1.000     1.000     1.000         3\n          billing_query      1.000     1.000     1.000        10\n     compliance_request      1.000     1.000     1.000         1\n     configuration_help      1.000     1.000     1.000         3\n            data_export      1.000     1.000     1.000         1\n         data_residency      1.000     1.000     1.000         6\n         database_issue      1.000     1.000     1.000         1\n     deployment_failure      1.000     1.000     1.000         5\n        feature_request      1.000     1.000     1.000         3\n       integration_help      1.000     1.000     1.000         3\n             onboarding      1.000     1.000     1.000         4\nperformance_degradation      1.000     1.000     1.000         3\n       quota_or_overage      1.000     1.000     1.000         2\n             rate_limit      1.000     1.000     1.000         1\n       rollback_request      1.000     1.000     1.000         6\n      security_incident      1.000     1.000     1.000         4\n      sso_configuration      1.000     1.000     1.000         1\n        unclear_request      1.000     1.000     1.000         6\n          webhook_issue      1.000     1.000     1.000         3\n\n               accuracy                          1.000        80\n              macro avg      1.000     1.000     1.000        80\n           weighted avg      1.000     1.000     1.000        80\n",
+  "intent_accuracy": 1.0,
+  "urgency_accuracy": 0.4375,
+  "retrieval_hit_rate": 0.9622641509433962,
+  "label_escalation_rate": 0.4,
+  "routing_accuracy": 0.7,
+  "auto_label_agrees": 0.7608695652173914,
+  "avoidable_escalations": 13,
+  "must_not_breaches": [],
+  "calibration": [
+    [
+      0.8,
+      0.9,
+      1,
+      0.8898,
+      1.0
+    ],
+    [
+      0.9,
+      1.01,
+      79,
+      0.9974911392405061,
+      1.0
+    ]
+  ],
+  "segments": {
+    "customer_tier": {
+      "business": {
+        "tickets": 30,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.6666666666666666,
+        "escalation_rate": 0.3
+      },
+      "enterprise": {
+        "tickets": 8,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.875,
+        "escalation_rate": 0.375
+      },
+      "standard": {
+        "tickets": 42,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.6904761904761905,
+        "escalation_rate": 0.5238095238095238
+      }
+    },
+    "customer_region": {
+      "asia_pacific": {
+        "tickets": 21,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.7619047619047619,
+        "escalation_rate": 0.3333333333333333
+      },
+      "europe": {
+        "tickets": 25,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.6,
+        "escalation_rate": 0.44
+      },
+      "latin_america": {
+        "tickets": 7,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.8571428571428571,
+        "escalation_rate": 0.7142857142857143
+      },
+      "north_america": {
+        "tickets": 27,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.7037037037037037,
+        "escalation_rate": 0.4074074074074074
+      }
+    },
+    "language_fluency": {
+      "fluent": {
+        "tickets": 61,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.7540983606557377,
+        "escalation_rate": 0.39344262295081966
+      },
+      "non_fluent": {
+        "tickets": 19,
+        "intent_accuracy": 1.0,
+        "routing_accuracy": 0.5263157894736842,
+        "escalation_rate": 0.5263157894736842
+      }
+    }
+  }
+}

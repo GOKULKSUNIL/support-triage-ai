@@ -1,0 +1,12 @@
+== 2026-11-18T18:48:02Z clone
+fb90bca Add escalation context packet with PR-03 summary and template fallback (FR-09)
+== README setup
+== provider check
+llm      model: openai/gpt-oss-20b  reply: ready  latency: 0.54s
+== tests
+54 passed in 35.01s
+== 2026-11-18T18:49:19Z gate run start
+== 2026-11-18T19:09:21Z gate run exit=0
+Done: 80 tickets, reconciled=True. Report: evaluation/results/2026-11-19-gate-validation/metrics_report.md
+
+[exited with code 0]
