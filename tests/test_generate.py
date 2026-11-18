@@ -42,3 +42,31 @@ def test_bad_shape_and_provider_down_are_not_sent():
 def test_t13a_every_reply_starts_with_the_automated_label():
     llm = FakeLLM(PR01=reply(("Pin your dependencies.", ["DOC-DEPLOY-003#resolution"])))
     assert draft(TICKET, PASSAGES, llm).text.startswith(AUTO_LABEL)
+
+
+def _cls(intent="security_incident"):
+    from src.classify import Classification
+    return Classification(intent=intent, urgency="high", confidence=0.97,
+                          alternatives=[(intent, 0.97), ("account_access", 0.02), ("api_key_issue", 0.01)])
+
+
+PACKET_FIELDS = {"summary", "customer_asks", "unsure_about", "suggested_articles", "intent",
+                 "confidence", "alternatives", "route_reason", "priority", "source"}
+
+
+def test_t09a_escalation_packet_has_every_field():
+    from src.generate import escalation_packet
+    llm = FakeLLM(PR03={"summary": "Customer reports a suspected breach.", "customer_asks": "Help.",
+                        "unsure_about": "Protected category.", "suggested_articles": ["DOC-DEPLOY-003",
+                                                                                      "DOC-FAKE-999"]})
+    p = escalation_packet(TICKET, _cls(), PASSAGES, "Escalated: protected category.", "P1", "security", llm)
+    assert PACKET_FIELDS <= set(p) and p["summary"] and p["source"].startswith("PR-03")
+    assert p["suggested_articles"] == ["DOC-DEPLOY-003"]  # ids not retrieved are dropped
+
+
+def test_t09b_provider_down_still_gives_template_packet():
+    from src.generate import escalation_packet
+    for llm in (FakeLLM(), FakeLLM(PR03={"summary": ""})):  # down, or unusable answer
+        p = escalation_packet(TICKET, _cls(), PASSAGES, "Escalated: x.", "P1", "security", llm)
+        assert PACKET_FIELDS <= set(p) and p["source"] == "template" and p["summary"] is None
+        assert p["intent"] == "security_incident" and p["suggested_articles"] == ["DOC-DEPLOY-003"]

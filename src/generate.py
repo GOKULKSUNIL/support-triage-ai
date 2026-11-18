@@ -73,6 +73,44 @@ def render(sentences: list[Sentence], passages: list[Hit]) -> str:
     return f"{AUTO_LABEL}\n\n" + " ".join(lines) + f"\n\nSources:\n{footer}"
 
 
+def escalation_packet(ticket: Ticket, c, passages: list[Hit], reason: str, priority: str,
+                      priority_reason: str, llm: LLM) -> dict:
+    """Handover note for Tier 2 (FR-09). Code supplies the facts; PR-03 adds the
+    written summary. If the model is unavailable or its answer is unusable, the
+    template packet is returned without a summary, so every escalation has one."""
+    retrieved = sorted({p.doc_id for p in passages})
+    packet = {
+        "summary": None, "customer_asks": None, "unsure_about": reason,
+        "suggested_articles": retrieved,
+        "intent": c.intent if c else None,
+        "confidence": c.confidence if c else None,
+        "alternatives": c.alternatives if c else [],
+        "route_reason": reason, "priority": priority, "priority_reason": priority_reason,
+        "source": "template",
+    }
+    if c is None or not ticket.text:
+        return packet
+    prompt = load_prompt("PR-03")
+    titles = {p.doc_id: p.title for p in passages}
+    try:
+        raw, call = llm.complete_json(
+            prompt, channel=ticket.channel, tier=ticket.customer_tier, subject=ticket.subject,
+            body=ticket.body, intent=c.intent, confidence=f"{c.confidence:.2f}",
+            # Only alternatives with a real chance; listing 0.00 ones invents doubt.
+            alternatives="; ".join(f"{i} {p:.2f}" for i, p in c.alternatives[1:] if p >= 0.05)
+            or "none",
+            reason=reason, articles="; ".join(f"{d}: {titles[d]}" for d in retrieved) or "none")
+    except (ProviderUnavailable, ValueError):
+        return packet
+    if not all(isinstance(raw.get(k), str) and raw.get(k).strip()
+               for k in ("summary", "customer_asks", "unsure_about")):
+        return packet
+    suggested = [d for d in raw.get("suggested_articles") or [] if d in titles]
+    return {**packet, "summary": raw["summary"].strip(), "customer_asks": raw["customer_asks"].strip(),
+            "unsure_about": raw["unsure_about"].strip(), "suggested_articles": suggested,
+            "source": f"{call['prompt']} v{call['version']}", "call": call}
+
+
 def draft(ticket: Ticket, passages: list[Hit], llm: LLM) -> Draft:
     prompt = load_prompt("PR-01")
     try:

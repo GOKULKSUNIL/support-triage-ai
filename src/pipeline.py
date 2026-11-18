@@ -19,7 +19,7 @@ from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from src.classify import Classification, Classifier
-from src.generate import Draft, draft
+from src.generate import Draft, draft, escalation_packet
 from src.guardrails import Validation, validate
 from src.ingest import Ticket
 from src.llm import LLM
@@ -101,19 +101,11 @@ class Pipeline:
             "status": "sent", "text": d.text,
             "sentences": [s.model_dump() for s in d.sentences]}}
 
-    @staticmethod
-    def _escalate(state: State) -> dict:
-        # Template packet (FR-09); the PR-03 written summary arrives in B-16.
-        c, r = state["classification"], state["route"]
-        return {"packet": {
-            "summary": None,
-            "intent": c.intent,
-            "alternatives": c.alternatives,
-            "suggested_articles": sorted({p.doc_id for p in state["passages"]}),
-            "unsure_about": r.reason,
-            "priority": r.priority,
-            "priority_reason": r.priority_reason,
-        }}
+    def _escalate(self, state: State) -> dict:
+        r = state["route"]
+        return {"packet": escalation_packet(state["ticket"], state["classification"],
+                                            state["passages"], r.reason, r.priority,
+                                            r.priority_reason, self.llm)}
 
     def process(self, ticket: Ticket) -> dict:
         start = time.perf_counter()
@@ -163,7 +155,8 @@ class Pipeline:
             "packet": state.get("packet"),
             "guardrail_checks": [c.model_dump() for c in v.checks] if v else [],
             "blocked": bool(v and v.blocked),
-            "llm_calls": [call for call in (d.call if d else None, v.call if v else None) if call],
+            "llm_calls": [call for call in (d.call if d else None, v.call if v else None,
+                                            (state.get("packet") or {}).get("call")) if call],
             "latency_ms": latency_ms,
             "error": error,
             "labels": ticket.labels,

@@ -78,9 +78,10 @@ may be sent.
      │ pass                                   blocked ──────────┤
      ▼                                                          ▼
   SENT: label + reply + [DOC-ID] citations          ┌──────────────────┐
-                                                    │ escalate         │ packet: intent,
-                                                    │ priority P1–P3   │ alternatives, articles,
-                                                    └──────────────────┘ what was uncertain
+                                                    │ escalate         │ packet: PR-03 summary,
+                                                    │ priority P1–P3   │ customer ask, intent,
+                                                    └──────────────────┘ articles, uncertainty
+                                                     (template packet if the model is down)
      │                                                          │
      └──────────────────────────┬───────────────────────────────┘
                                 ▼
@@ -134,7 +135,7 @@ may be sent.
 
 | Service | Used for | Without it |
 |---|---|---|
-| Groq, `openai/gpt-oss-20b` | PR-01 drafting, PR-02 grounding | Fallback provider; if none answers, the ticket escalates with "provider unavailable" |
+| Groq, `openai/gpt-oss-20b` | PR-01 drafting, PR-02 grounding, PR-03 escalation summary | Fallback provider; if none answers, the ticket escalates with "provider unavailable" and a template packet |
 | OpenRouter (fallback) | Same prompts when Groq fails | Ticket escalates |
 | Hugging Face | One-time download of `all-MiniLM-L6-v2` | Needed once per machine; then offline |
 
