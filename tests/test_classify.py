@@ -1,7 +1,7 @@
-"""FR-02 classifier tests (T-02a-c). T-02d is analysis/classifier_eval.py."""
+"""FR-02 classifier tests (T-02a-c). T-02d (per-intent precision/recall) is in the harness metrics report."""
 import pytest
 
-from src.classifier import Classifier
+from src.classify import Classifier
 from src.ingest import load_tickets, normalise
 
 INTENTS = 22

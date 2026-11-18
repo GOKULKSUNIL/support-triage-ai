@@ -1,11 +1,11 @@
-"""FR-04/FR-05 routing tests (T-04a-c, T-05a-b). T-05c is analysis/routing_eval.py."""
+"""FR-04/FR-05 routing tests (T-04a-c, T-05a-b). T-05c (no must-not ticket auto-answered) is in the harness metrics report."""
 import inspect
 
-import src.routing as routing
-from src.classifier import Classification
+import src.route as routing
+from src.classify import Classification
 from src.ingest import normalise
-from src.retrieval import Hit
-from src.routing import route
+from src.retrieve import Hit
+from src.route import route
 
 PASSAGE = Hit(passage_id="DOC-ACCT-001#resolution", doc_id="DOC-ACCT-001", title="t",
               section="Resolution", applies_to="All plans", text="t", score=0.7)

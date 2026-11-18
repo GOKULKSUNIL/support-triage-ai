@@ -12,9 +12,10 @@ from functools import lru_cache
 import chromadb
 from sentence_transformers import SentenceTransformer
 
+from src import config
 from src.chunking import Passage, build_passages, load_docs
 
-DOCS_PATH = "data/documentation.json"
+DOCS_PATH = config.path("data/documentation.json")
 
 
 class Hit(Passage):
@@ -33,8 +34,8 @@ def embed(texts: list[str]) -> list[list[float]]:
 class Index:
     def __init__(self, strategy: str = "section", path: str | None = None,
                  docs_path: str = DOCS_PATH):
-        path = path or os.getenv("CHROMA_PATH", "./storage/chroma")
-        client = chromadb.PersistentClient(path=path)
+        path = config.path(path) if path else config.setting_path("CHROMA_PATH", "./storage/chroma")
+        client = chromadb.PersistentClient(path=str(path))
         self.passages = {p.passage_id: p for p in build_passages(load_docs(docs_path), strategy)}
         self.collection = client.get_or_create_collection(
             f"kb_{strategy}", metadata={"hnsw:space": "cosine"})

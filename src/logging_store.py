@@ -14,10 +14,13 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from src import config
+
 COLUMNS = (
     "decision_id", "created_at", "ticket_id", "channel", "input_text", "intent", "urgency",
-    "confidence", "alternatives", "threshold", "action", "reason", "priority", "sources_used",
-    "guardrail_checks", "blocked", "prompt_versions", "model", "latency_ms", "error",
+    "confidence", "alternatives", "threshold", "action", "reason", "priority", "stage",
+    "requirement_ids", "sources_used", "guardrail_checks", "blocked", "prompt_versions", "model",
+    "latency_ms", "error",
 )
 _SCHEMA = f"CREATE TABLE IF NOT EXISTS decisions ({', '.join(COLUMNS)}, PRIMARY KEY (decision_id))"
 
@@ -34,7 +37,7 @@ def mask(text: str, customer_name: str = "", customer_id: str = "") -> str:
 
 def _db_path() -> str:
     url = os.getenv("DATABASE_URL", "sqlite:///./storage/decisions.db")
-    return url.removeprefix("sqlite:///")
+    return str(config.path(url.removeprefix("sqlite:///")))
 
 
 class DecisionLog:
@@ -43,6 +46,11 @@ class DecisionLog:
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         with self._connect() as db:
             db.execute(_SCHEMA)
+            # An older log file gains any column added since it was created.
+            existing = {row[1] for row in db.execute("PRAGMA table_info(decisions)")}
+            for column in COLUMNS:
+                if column not in existing:
+                    db.execute(f"ALTER TABLE decisions ADD COLUMN {column}")
 
     def _connect(self):
         return sqlite3.connect(self.path)
@@ -57,8 +65,8 @@ class DecisionLog:
         for key, value in fields.items():
             row[key] = json.dumps(value) if isinstance(value, (list, dict, tuple)) else value
         with self._connect() as db:
-            db.execute(f"INSERT INTO decisions VALUES ({', '.join('?' * len(COLUMNS))})",
-                       [row[c] for c in COLUMNS])
+            db.execute(f"INSERT INTO decisions ({', '.join(COLUMNS)}) "
+                       f"VALUES ({', '.join('?' * len(COLUMNS))})", [row[c] for c in COLUMNS])
         return row["decision_id"]
 
     def count(self) -> int:

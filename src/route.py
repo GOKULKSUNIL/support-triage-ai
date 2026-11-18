@@ -12,9 +12,9 @@ import re
 
 from pydantic import BaseModel
 
-from src.classifier import Classification
+from src.classify import Classification
 from src.ingest import Ticket
-from src.retrieval import Hit
+from src.retrieve import Hit
 
 PROTECTED_INTENTS = frozenset({"security_incident", "compliance_request", "data_residency"})
 _COMPROMISE = re.compile(r"\b(hacked|compromised|unauthori[sz]ed access)\b", re.I)
@@ -38,6 +38,7 @@ class Route(BaseModel):
     protected_reason: str = ""
     priority: str = ""  # "P1" | "P2" | "P3" on escalations, "" on auto_respond
     priority_reason: str = ""
+    requirement_ids: list[str] = []  # the requirement(s) behind this decision, for the log
 
 
 def priority(c: Classification, text: str) -> tuple[str, str]:
@@ -72,28 +73,30 @@ def route(ticket: Ticket, c: Classification, passages: list[Hit],
           threshold: float | None = None) -> Route:
     tau = confidence_threshold() if threshold is None else threshold
 
-    def escalate(reason, protected=False, protected_reason=""):
+    def escalate(reason, reqs, protected=False, protected_reason=""):
         level, why = priority(c, ticket.text)
         return Route(action="escalate", reason=reason, threshold_used=tau,
                      protected=protected, protected_reason=protected_reason,
-                     priority=level, priority_reason=why)
+                     priority=level, priority_reason=why, requirement_ids=reqs + ["FR-09"])
 
     blocking = BLOCKING_FLAGS & set(ticket.flags)
     if blocking:
-        return escalate(f"Escalated: ticket could not be read properly ({', '.join(sorted(blocking))}).")
+        return escalate(f"Escalated: ticket could not be read properly ({', '.join(sorted(blocking))}).",
+                        ["FR-01", "FR-12"])
     protected, why = protected_check(c, ticket.text)
     if protected:
-        return escalate(f"Escalated: {why}; these always go to a person.", True, why)
+        return escalate(f"Escalated: {why}; these always go to a person.", ["FR-05"], True, why)
     if c.fallback:
-        return escalate("Escalated: the classifier could not process this ticket.")
+        return escalate("Escalated: the classifier could not process this ticket.", ["FR-02", "FR-12"])
     if c.intent in NO_DOC_INTENTS:
-        return escalate(f"Escalated: '{c.intent}' has no knowledge-base answer; it needs a person.")
+        return escalate(f"Escalated: '{c.intent}' has no knowledge-base answer; it needs a person.",
+                        ["FR-04"])
     if c.confidence < tau:
         return escalate(f"Escalated: confidence {c.confidence:.2f} in '{c.intent}' is below the "
-                        f"threshold {tau:.2f}.")
+                        f"threshold {tau:.2f}.", ["FR-04"])
     if not passages:
         return escalate(f"Escalated: no knowledge-base article matched closely enough to answer "
-                        f"'{c.intent}'.")
-    return Route(action="auto_respond", threshold_used=tau,
+                        f"'{c.intent}'.", ["FR-03", "FR-12"])
+    return Route(action="auto_respond", threshold_used=tau, requirement_ids=["FR-04"],
                  reason=f"Auto-respond: '{c.intent}' at confidence {c.confidence:.2f} "
                         f"(threshold {tau:.2f}), answered from {passages[0].doc_id}.")

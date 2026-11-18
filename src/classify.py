@@ -5,24 +5,22 @@ logistic regressions are trained on the development tickets: one for the 22
 intents, one for urgency. Probabilities are calibrated (isotonic, 3-fold) so
 that a stated 0.85 means right about 85% of the time, which is what makes the
 routing threshold meaningful. Isotonic was chosen over sigmoid and raw
-probabilities on the development tickets (see analysis/classifier_eval.py).
+probabilities on the development tickets; the comparison is reported in the evaluation section.
 No LLM is involved.
 
 The trained model is saved to storage/; if it is missing it is retrained from
 the development tickets, so a fresh clone works with no extra step.
 """
-import os
-from pathlib import Path
-
 import joblib
 from pydantic import BaseModel
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.linear_model import LogisticRegression
 
+from src import config
 from src.ingest import Ticket, load_tickets
-from src.retrieval import embed
+from src.retrieve import embed
 
-TRAIN_PATH = "data/development_tickets.json"
+TRAIN_PATH = config.path("data/development_tickets.json")
 FALLBACK_INTENT = "unclear_request"
 
 
@@ -53,7 +51,8 @@ def train(tickets: list[Ticket]) -> dict:
 class Classifier:
     def __init__(self, models: dict | None = None, path: str | None = None):
         if models is None:
-            path = Path(path or os.getenv("CLASSIFIER_PATH", "./storage/classifier.joblib"))
+            path = (config.path(path) if path
+                    else config.setting_path("CLASSIFIER_PATH", "./storage/classifier.joblib"))
             if path.exists():
                 models = joblib.load(path)
             else:

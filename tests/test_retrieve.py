@@ -1,7 +1,7 @@
-"""FR-03 retrieval tests (T-03a-b). T-03c is analysis/retrieval_eval.py."""
+"""FR-03 retrieval tests (T-03a-b). T-03c (retrieval hit rate) is in the harness metrics report."""
 import pytest
 
-from src.retrieval import Index
+from src.retrieve import Index
 
 
 @pytest.fixture(scope="module")

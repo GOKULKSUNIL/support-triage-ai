@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from src.decision_log import DecisionLog, mask
+from src.logging_store import DecisionLog, mask
 
 
 @pytest.fixture
@@ -35,6 +35,22 @@ def test_t08c_no_raw_customer_name_or_id(log):
     stored = log.rows()[0]["input_text"]
     assert "Xin" not in stored and "Kulkarni" not in stored and "CUST-1131" not in stored
     assert "[NAME]" in stored and "[CUSTOMER_ID]" in stored and "deploys fail" in stored
+
+
+def test_stage_and_requirement_ids_are_stored(log):
+    log.write(ticket_id="T1", stage="route", requirement_ids=["FR-05", "FR-09"])
+    row = log.rows()[0]
+    assert row["stage"] == "route" and json.loads(row["requirement_ids"]) == ["FR-05", "FR-09"]
+
+
+def test_older_log_file_gains_new_columns(tmp_path):
+    import sqlite3
+    db = tmp_path / "old.db"
+    with sqlite3.connect(db) as c:
+        c.execute("CREATE TABLE decisions (decision_id, created_at, ticket_id, PRIMARY KEY (decision_id))")
+    log = DecisionLog(str(db))
+    log.write(ticket_id="T1", stage="draft")
+    assert log.rows()[0]["stage"] == "draft"
 
 
 def test_unknown_field_is_rejected(log):
