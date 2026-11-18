@@ -26,7 +26,7 @@ cp .env.example .env   # then edit .env and add your key
 Check the model provider is reachable (should print `reply: ready`):
 
 ```bash
-python scripts/check_llm.py
+python -m src.llm
 ```
 
 ## Run

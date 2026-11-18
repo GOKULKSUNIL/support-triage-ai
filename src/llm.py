@@ -132,3 +132,27 @@ def _parse(content: str) -> dict:
     if not isinstance(data, dict):
         raise ValueError("model returned JSON that is not an object")
     return data
+
+
+def check() -> int:
+    """Connectivity check: ask each configured provider to reply 'ready'."""
+    providers = _providers()
+    if not providers:
+        print("LLM_API_KEY is not set. Copy .env.example to .env and add your key.")
+        return 1
+    status = 0
+    for name, client, model in providers:
+        start = time.perf_counter()
+        try:
+            resp = client.chat.completions.create(
+                model=model, temperature=0,
+                messages=[{"role": "user", "content": "Reply with the word ready."}])
+            reply = (resp.choices[0].message.content or "").strip()
+        except Exception as exc:  # report every provider, even if one fails
+            reply, status = f"FAILED ({type(exc).__name__}: {exc})", 1
+        print(f"{name:8} model: {model}  reply: {reply}  latency: {time.perf_counter() - start:.2f}s")
+    return status
+
+
+if __name__ == "__main__":
+    raise SystemExit(check())
