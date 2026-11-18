@@ -28,3 +28,25 @@ Check the model provider is reachable (should print `reply: ready`):
 ```bash
 python scripts/check_llm.py
 ```
+
+## Run
+
+Process any ticket file end to end, unattended:
+
+```bash
+python -m evaluation.harness --input data/validation_tickets.json --output evaluation/results/<run-name>
+```
+
+The output directory gets `results.jsonl` (one line per ticket), `decisions.db`
+(the decision log for the run), `metrics_report.md` and `metrics.json`. The
+command exits non-zero if tickets in, results out and log rows do not match.
+
+The first run downloads the embedding model (about 90 MB) and trains the
+classifier from `data/development_tickets.json` into `storage/`; later runs
+reuse both. The full development data is kept in `data/` for that reason.
+
+## Tests
+
+```bash
+python -m pytest tests/ -q
+```

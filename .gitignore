@@ -27,3 +27,6 @@ htmlcov/
 # Personal working notes (not part of the submission)
 docs/DECISIONS.md
 analysis/
+
+# Evaluation runs: reports and results are committed, the per-run log database is not
+evaluation/results/**/decisions.db
