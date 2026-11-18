@@ -1,0 +1,22 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cache the embedding model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-all-MiniLM-L6-v2
+      - run: python -m pip install --upgrade pip
+      # CPU-only PyTorch wheels: the tests never need a GPU.
+      - run: python -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+      # No API key: tests use a scripted model and never call a provider.
+      - run: python -m pytest tests/ -v
