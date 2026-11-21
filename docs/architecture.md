@@ -28,7 +28,7 @@ may be sent.
                   ┌─────────┘          │                     └────┬─────┘
                   ▼                    ▼                          ▼
           storage/classifier     storage/chroma              src/llm.py ──▶ Groq (primary)
-          .joblib                (116 passages)              (cache, retry,  └▶ OpenRouter (fallback)
+          .joblib                (116 passages)              (cache, retry,  └▶ gpt-oss-120b (fallback)
           (trained from          (built from                  fallback)
           data/development_       data/documentation.json)       │
           tickets.json)                                          ▼
@@ -136,7 +136,7 @@ may be sent.
 | Service | Used for | Without it |
 |---|---|---|
 | Groq, `openai/gpt-oss-20b` | PR-01 drafting, PR-02 grounding, PR-03 escalation summary | Fallback provider; if none answers, the ticket escalates with "provider unavailable" and a template packet |
-| OpenRouter (fallback) | Same prompts when Groq fails | Ticket escalates |
+| Groq, `openai/gpt-oss-120b` (fallback) | Same prompts when the main model fails or its daily allowance is used up (Groq counts limits per model) | Ticket escalates |
 | Hugging Face | One-time download of `all-MiniLM-L6-v2` | Needed once per machine; then offline |
 
 Classification, retrieval, routing and logging run locally and never need
@@ -148,7 +148,7 @@ the network.
 |---|---|
 | Malformed or empty ticket | Flagged at ingest, escalated, logged |
 | No passage above threshold | Escalated: no matching article |
-| Rate limit (429) | Wait as long as the provider asks (up to 65 s), retry up to 6 times, then fallback |
+| Rate limit (429) | Wait as long as the provider asks (up to 65 s), retry up to 6 times, then fallback; if it asks for more than 65 s (daily allowance used up), go to the fallback at once |
 | Timeout / connection error | Retry with backoff (3 times), then fallback |
 | Model returns bad JSON | Draft rejected → escalated (never cached) |
 | Grounding check cannot run | Reply blocked (fail closed) → escalated |
@@ -159,7 +159,7 @@ the network.
 | Variable | Default | Meaning |
 |---|---|---|
 | `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` | Groq, `openai/gpt-oss-20b` | Primary provider |
-| `FALLBACK_API_KEY`, `FALLBACK_BASE_URL`, `FALLBACK_MODEL` | OpenRouter | Fallback; blank key disables it |
+| `FALLBACK_API_KEY`, `FALLBACK_BASE_URL`, `FALLBACK_MODEL` | blank, blank, `openai/gpt-oss-120b` | Fallback model; with key and URL blank it runs on the main provider; blank model disables it |
 | `CONFIDENCE_THRESHOLD` | 0.80 | Minimum calibrated confidence to auto-respond |
 | `RELEVANCE_THRESHOLD` | 0.40 | Minimum passage similarity |
 | `RETRIEVAL_TOP_K` | 5 | Passages retrieved per ticket |

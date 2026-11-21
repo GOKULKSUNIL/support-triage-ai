@@ -29,6 +29,14 @@ RATE_LIMIT_RETRIES = 6
 MAX_WAIT_S = 65.0
 
 
+def _asked_wait(exc: RateLimitError) -> float:
+    """Seconds the provider asked us to wait (0 if it did not say)."""
+    try:
+        return float(exc.response.headers.get("retry-after"))
+    except (AttributeError, TypeError, ValueError):
+        return 0.0
+
+
 def _retry_after(exc: RateLimitError, attempt: int) -> float:
     try:
         return min(float(exc.response.headers.get("retry-after")) + 1.0, MAX_WAIT_S)
@@ -67,8 +75,13 @@ def _providers() -> list[tuple[str, OpenAI, str]]:
     out = []
     for prefix in ("LLM", "FALLBACK"):
         key = os.getenv(f"{prefix}_API_KEY", "")
+        base_url = os.getenv(f"{prefix}_BASE_URL")
+        if prefix == "FALLBACK" and not key and os.getenv("FALLBACK_MODEL"):
+            # A second model on the same provider: its rate limits are counted
+            # separately, so it takes over when the main model's allowance runs out.
+            key, base_url = os.getenv("LLM_API_KEY", ""), os.getenv("LLM_BASE_URL")
         if key and not key.startswith("your_"):
-            client = OpenAI(api_key=key, base_url=os.getenv(f"{prefix}_BASE_URL"),
+            client = OpenAI(api_key=key, base_url=base_url,
                             timeout=float(os.getenv("LLM_TIMEOUT", 20)), max_retries=0)
             out.append((prefix.lower(), client, os.getenv(f"{prefix}_MODEL")))
     return out
@@ -113,6 +126,8 @@ class LLM:
                     return parsed, info
                 except RateLimitError as exc:
                     errors.append(f"{name}: RateLimitError")
+                    if _asked_wait(exc) > MAX_WAIT_S:
+                        break  # daily allowance used up; waiting won't help, try the next provider
                     time.sleep(_retry_after(exc, attempt))
                 except (APITimeoutError, APIConnectionError) as exc:
                     errors.append(f"{name}: {type(exc).__name__}")

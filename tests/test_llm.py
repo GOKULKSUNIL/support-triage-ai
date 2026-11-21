@@ -27,9 +27,11 @@ class FakeClient:
         return type("R", (), {"choices": [_Msg(outcome)]})
 
 
-def _rate_limited():
+def _rate_limited(retry_after=None):
+    headers = {"retry-after": str(retry_after)} if retry_after else {}
     return RateLimitError("slow down", body=None,
-                          response=httpx.Response(429, request=httpx.Request("POST", "http://x")))
+                          response=httpx.Response(429, headers=headers,
+                                                  request=httpx.Request("POST", "http://x")))
 
 
 @pytest.fixture(autouse=True)
@@ -77,6 +79,25 @@ def test_bad_json_is_not_cached(tmp_path):
     with pytest.raises(ValueError):
         llm.complete_json(PROMPT, **VALUES)
     assert llm.complete_json(PROMPT, **VALUES)[0] == {"results": []}
+
+
+def test_daily_limit_goes_straight_to_fallback(tmp_path):
+    primary = FakeClient([_rate_limited(retry_after=3600)])
+    fallback = FakeClient(['{"results": []}'])
+    llm = LLM(cache_dir=str(tmp_path), providers=[("llm", primary, "m1"), ("fallback", fallback, "m2")])
+    assert llm.complete_json(PROMPT, **VALUES)[1]["provider"] == "fallback"
+    assert primary.calls == 1
+
+
+def test_fallback_model_without_its_own_key_uses_the_main_provider(monkeypatch):
+    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_BASE_URL", "https://api.groq.com/openai/v1")
+    monkeypatch.setenv("FALLBACK_API_KEY", "")
+    monkeypatch.setenv("FALLBACK_MODEL", "openai/gpt-oss-120b")
+    providers = llm_module._providers()
+    assert [(name, model) for name, _, model in providers] == [
+        ("llm", llm_module.os.getenv("LLM_MODEL")), ("fallback", "openai/gpt-oss-120b")]
+    assert str(providers[1][1].base_url).startswith("https://api.groq.com")
 
 
 def test_switching_model_does_not_reuse_another_models_answer(tmp_path):
