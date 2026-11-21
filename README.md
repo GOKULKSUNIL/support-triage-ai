@@ -69,6 +69,11 @@ classifier's confidence. To see them on a dashboard (macOS, Apple Silicon):
 2. Start the API (`uvicorn src.api:app --port 8000`), then `./monitoring/start.sh`.
 3. Open http://localhost:3000/d/support-triage. The dashboard and the
    Prometheus data source are set up automatically from `monitoring/`.
+4. To watch a full harness run on the dashboard, start it with the metrics
+   port set: `METRICS_PORT=8001 python -m evaluation.harness --input ... --output ...`.
+   Without it (the default) the harness serves no metrics. Its figures show
+   only while the run is in progress; the run's full figures are in its
+   `metrics_report.md`.
 
 ## Kill switch
 

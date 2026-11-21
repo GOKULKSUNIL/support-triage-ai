@@ -1,4 +1,5 @@
-# Prometheus scrapes the API's metrics (Setup Guide section 6).
+# Prometheus scrapes the API's metrics (Setup Guide section 6), and the
+# harness's while a run started with METRICS_PORT=8001 is in progress.
 # Start the API first: uvicorn src.api:app --port 8000
 global:
   scrape_interval: 15s
@@ -7,3 +8,7 @@ scrape_configs:
     metrics_path: /metrics/
     static_configs:
       - targets: ["localhost:8000"]
+  - job_name: "harness"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:8001"]

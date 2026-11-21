@@ -25,6 +25,29 @@ def test_t10a_every_ticket_in_an_unseen_file_has_a_result_and_log_row(tmp_path, 
     assert "reconciled" in report and "No labels in this file" in report
 
 
+def test_metrics_port_publishes_the_run_and_is_off_by_default(tmp_path, monkeypatch):
+    import evaluation.harness as harness
+    from src.monitoring import TICKETS
+
+    monkeypatch.setenv("LLM_API_KEY", "")
+    monkeypatch.setenv("FALLBACK_API_KEY", "")
+    monkeypatch.setenv("LLM_CACHE_DIR", str(tmp_path / "cache"))
+    ports = []
+    monkeypatch.setattr(harness, "start_http_server", lambda port: ports.append(port))
+    src = tmp_path / "t.json"
+    src.write_text(json.dumps([{"ticket_id": "M1", "channel": "chat", "body": ""}]))
+    count = lambda: TICKETS.labels(channel="chat", outcome="escalate")._value.get()  # noqa: E731
+
+    monkeypatch.delenv("METRICS_PORT", raising=False)
+    before = count()
+    assert main(["--input", str(src), "--output", str(tmp_path / "off")]) == 0
+    assert ports == [] and count() == before
+
+    monkeypatch.setenv("METRICS_PORT", "8001")
+    assert main(["--input", str(src), "--output", str(tmp_path / "on")]) == 0
+    assert ports == [8001] and count() == before + 1
+
+
 def _result(tid, intent, action, label_intent, label_route, must_not=False, docs=(), sources=()):
     return {"ticket_id": tid, "channel": "email", "customer_tier": "standard",
             "customer_region": "europe", "language_fluency": "fluent", "flags": [],

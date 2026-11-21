@@ -9,15 +9,22 @@ Writes to the output directory:
   metrics.json        the same figures, machine-readable
 Every ticket is processed even if others fail; the run ends with a
 reconciliation of tickets in, results out and log rows.
+
+With METRICS_PORT set (e.g. 8001), the run also serves Prometheus metrics on
+that port while it runs, so the dashboard follows it live. Off by default.
 """
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from prometheus_client import start_http_server
+
 from evaluation.metrics import compute, render
+from src import monitoring
 from src.ingest import load_tickets
 from src.logging_store import DecisionLog
 from src.pipeline import Pipeline
@@ -50,10 +57,16 @@ def main(argv=None):
 
     tickets = load_tickets(args.input)
     pipeline = Pipeline(log=DecisionLog(str(db)))
+    port = os.getenv("METRICS_PORT", "").strip()
+    if port:  # optional: the dashboard follows the run live; off unless set
+        start_http_server(int(port))
+        print(f"Metrics on http://localhost:{port}/metrics", file=sys.stderr)
     results = []
     with open(out / "results.jsonl", "w", encoding="utf-8") as f:
         for i, ticket in enumerate(tickets, 1):
             result = pipeline.process(ticket)
+            if port:
+                monitoring.record(result, result["latency_ms"] / 1000)
             results.append(result)
             f.write(json.dumps(result, ensure_ascii=False) + "\n")
             f.flush()
