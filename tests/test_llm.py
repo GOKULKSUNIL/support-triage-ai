@@ -77,3 +77,11 @@ def test_bad_json_is_not_cached(tmp_path):
     with pytest.raises(ValueError):
         llm.complete_json(PROMPT, **VALUES)
     assert llm.complete_json(PROMPT, **VALUES)[0] == {"results": []}
+
+
+def test_switching_model_does_not_reuse_another_models_answer(tmp_path):
+    a = FakeClient(['{"results": ["from a"]}'])
+    b = FakeClient(['{"results": ["from b"]}'])
+    LLM(cache_dir=str(tmp_path), providers=[("llm", a, "small-model")]).complete_json(PROMPT, **VALUES)
+    data, _ = LLM(cache_dir=str(tmp_path), providers=[("llm", b, "big-model")]).complete_json(PROMPT, **VALUES)
+    assert data == {"results": ["from b"]} and b.calls == 1

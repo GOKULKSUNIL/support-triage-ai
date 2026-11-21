@@ -82,7 +82,10 @@ class LLM:
         self.providers = _providers() if providers is None else providers
 
     def _cache_path(self, prompt: Prompt, messages: list[dict]) -> Path:
-        key = json.dumps([prompt.prompt_id, prompt.version, messages], sort_keys=True)
+        # The primary model is part of the key: switching model must not reuse
+        # answers another model gave to the same prompt.
+        model = self.providers[0][2] if self.providers else None
+        key = json.dumps([prompt.prompt_id, prompt.version, model, messages], sort_keys=True)
         return self.cache_dir / f"{hashlib.sha256(key.encode()).hexdigest()}.json"
 
     def complete_json(self, prompt: Prompt, **values) -> tuple[dict, dict]:
