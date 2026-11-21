@@ -23,6 +23,13 @@ COLUMNS = (
     "latency_ms", "error",
 )
 _SCHEMA = f"CREATE TABLE IF NOT EXISTS decisions ({', '.join(COLUMNS)}, PRIMARY KEY (decision_id))"
+# Kill switch: every pause and resume is appended, never overwritten, so the
+# latest row is the current state and the table is its own audit trail.
+_CONTROL_SCHEMA = "CREATE TABLE IF NOT EXISTS control_events (changed_at, paused, changed_by, reason)"
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def mask(text: str, customer_name: str = "", customer_id: str = "") -> str:
@@ -46,6 +53,7 @@ class DecisionLog:
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         with self._connect() as db:
             db.execute(_SCHEMA)
+            db.execute(_CONTROL_SCHEMA)
             # An older log file gains any column added since it was created.
             existing = {row[1] for row in db.execute("PRAGMA table_info(decisions)")}
             for column in COLUMNS:
@@ -60,8 +68,7 @@ class DecisionLog:
         if unknown:
             raise ValueError(f"unknown decision-log fields: {sorted(unknown)}")
         row = {c: None for c in COLUMNS}
-        row.update(decision_id=uuid.uuid4().hex,
-                   created_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
+        row.update(decision_id=uuid.uuid4().hex, created_at=_now())
         for key, value in fields.items():
             row[key] = json.dumps(value) if isinstance(value, (list, dict, tuple)) else value
         with self._connect() as db:
@@ -77,3 +84,22 @@ class DecisionLog:
         with self._connect() as db:
             db.row_factory = sqlite3.Row
             return [dict(r) for r in db.execute("SELECT * FROM decisions ORDER BY created_at")]
+
+    def set_paused(self, paused: bool, by: str, reason: str) -> None:
+        with self._connect() as db:
+            db.execute("INSERT INTO control_events VALUES (?, ?, ?, ?)", (_now(), int(paused), by, reason))
+
+    def control_history(self) -> list[dict]:
+        with self._connect() as db:
+            db.row_factory = sqlite3.Row
+            return [dict(r) for r in db.execute("SELECT * FROM control_events ORDER BY rowid")]
+
+    def control_state(self) -> dict | None:
+        """The latest pause/resume event, or None if the switch was never used."""
+        history = self.control_history()
+        return history[-1] if history else None
+
+    def paused(self) -> dict | None:
+        """The pause event in force, or None while automatic answering is on."""
+        state = self.control_state()
+        return state if state and state["paused"] else None

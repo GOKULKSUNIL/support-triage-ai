@@ -115,7 +115,8 @@ may be sent.
 | `src/generate.py` | PR-01 drafting, citation checks, rendering, automated-reply label |
 | `src/guardrails.py` | Private-data check and PR-02 grounding check |
 | `src/pipeline.py` | The LangGraph graph tying the steps together; never raises |
-| `src/logging_store.py` | SQLite decision log, customer name and ID masked |
+| `src/logging_store.py` | SQLite decision log, customer name and ID masked; kill-switch events |
+| `src/control.py` | Kill switch command: pause, resume, status |
 | `evaluation/harness.py` | One command over any ticket file; writes results and report |
 | `evaluation/metrics.py` | Volume, business, technical and governance figures |
 | `prompts/` | Prompt texts with versions and the register |
@@ -129,6 +130,7 @@ may be sent.
 | `storage/classifier.joblib` | Trained classifier | First classification | No |
 | `cache/llm/` | Model responses, keyed by prompt id + version + inputs | Each new model call | No |
 | `<run>/decisions.db` | One row per ticket | Harness run | No |
+| `storage/decisions.db` (`DATABASE_URL`) | Kill-switch events (who, when, why); decisions written outside a harness run | `python -m src.control`, first pipeline start | No |
 | `<run>/results.jsonl`, `metrics_report.md` | Per-ticket results, run report | Harness run | — |
 
 ## 6. External services
@@ -168,3 +170,16 @@ the network.
 
 The protected-category rule and the guardrails have no configuration on
 purpose: they cannot be switched off.
+
+## 9. Kill switch
+
+| Question (Governance Framework) | Answer |
+|---|---|
+| What is the mechanism? | `python -m src.control pause --by "<name>" --reason "<why>"` writes a pause event to the configured store (`DATABASE_URL`). The pipeline reads it for every ticket; while paused, every ticket is escalated to a person with the pause in its reason. `resume` turns automatic answering back on; `status` shows the current state. No deployment or restart. |
+| Who is authorised to use it? | The Head of Support (Marcus) or the support lead on duty. Each event records who pulled the switch and why. |
+| How long until it takes effect? | The next ticket. The switch is read per ticket, not at start-up. |
+| What happens to tickets in flight? | It is read again just before a reply is released, so a ticket being drafted when the switch is pulled is escalated (reply status `paused`), not sent. |
+| How is it tested? | `tests/test_control.py`: pause escalates without calling the model, a pause during drafting stops the reply, resume restores sending, the command line works, and a harness run obeys the switch in the configured store. |
+
+Every pause and resume is appended to `control_events`, never overwritten, so the table is its own audit trail.
+

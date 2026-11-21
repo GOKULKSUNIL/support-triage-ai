@@ -42,10 +42,13 @@ class State(TypedDict, total=False):
 class Pipeline:
     def __init__(self, classifier: Classifier | None = None, index: Index | None = None,
                  log: DecisionLog | None = None, threshold: float | None = None,
-                 llm: LLM | None = None):
+                 llm: LLM | None = None, control: DecisionLog | None = None):
         self.classifier = classifier or Classifier()
         self.index = index or Index("section")
         self.log = log or DecisionLog()
+        # The kill switch is always read from the configured store (DATABASE_URL),
+        # even when a harness run writes its decisions to its own file.
+        self.control = control or DecisionLog()
         self.llm = llm or LLM()
         self.threshold = threshold
         self.graph = self._build()
@@ -54,8 +57,7 @@ class Pipeline:
         g = StateGraph(State)
         g.add_node("classify", lambda s: {"classification": self.classifier.classify(s["ticket"])})
         g.add_node("retrieve", lambda s: {"passages": self.index.search(s["ticket"].text)})
-        g.add_node("route", lambda s: {"route": route(s["ticket"], s["classification"],
-                                                       s["passages"], self.threshold)})
+        g.add_node("route", self._route)
         g.add_node("draft", self._draft)
         g.add_node("validate", self._validate)
         g.add_node("escalate", self._escalate)
@@ -77,6 +79,21 @@ class Pipeline:
         return Route(action="escalate", reason=reason, threshold_used=state["route"].threshold_used,
                      priority=level, priority_reason=why, requirement_ids=reqs + ["FR-09"])
 
+    def _paused(self, state: State) -> Route | None:
+        """Kill switch (src/control.py): while paused, nothing is answered automatically."""
+        pause = self.control.paused()
+        if not pause:
+            return None
+        return self._escalated(state, f"Escalated: automatic answering is paused (kill switch, "
+                                      f"by {pause['changed_by']} at {pause['changed_at']}: "
+                                      f"{pause['reason']}).", ["FR-04"])
+
+    def _route(self, state: State) -> dict:
+        r = route(state["ticket"], state["classification"], state["passages"], self.threshold)
+        if r.action == "auto_respond":
+            r = self._paused({**state, "route": r}) or r
+        return {"route": r}
+
     def _draft(self, state: State) -> dict:
         d = draft(state["ticket"], state["passages"], self.llm)
         if d.ok:
@@ -94,6 +111,11 @@ class Pipeline:
             return {"validation": v, "reply": {"status": "blocked", "text": "", "problem": failed},
                     "route": self._escalated(state, f"Escalated: reply blocked by guardrail ({failed}).",
                                              ["FR-07"])}
+        # Checked again at release: a pause made while this ticket was drafting still holds it.
+        paused = self._paused(state)
+        if paused:
+            return {"validation": v, "route": paused,
+                    "reply": {"status": "paused", "text": "", "problem": "kill switch"}}
         return {"validation": v,
                 "route": state["route"].model_copy(
                     update={"requirement_ids": ["FR-04", "FR-06", "FR-07", "FR-13"]}),

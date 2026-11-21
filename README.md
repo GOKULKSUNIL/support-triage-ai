@@ -45,6 +45,21 @@ The first run downloads the embedding model (about 90 MB) and trains the
 classifier from `data/development_tickets.json` into `storage/`; later runs
 reuse both. The full development data is kept in `data/` for that reason.
 
+## Kill switch
+
+Stop all automatic answers at once, without a deployment; every ticket then
+goes to a person until it is resumed:
+
+```bash
+python -m src.control pause --by "Marcus Adeyemi" --reason "why"
+python -m src.control status
+python -m src.control resume --by "Marcus Adeyemi" --reason "why"
+```
+
+It takes effect on the next ticket, including tickets already being drafted.
+The switch is kept in the configured store (`DATABASE_URL`); check `status`
+before a full run.
+
 ## Tests
 
 ```bash
