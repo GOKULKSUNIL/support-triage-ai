@@ -117,6 +117,8 @@ may be sent.
 | `src/pipeline.py` | The LangGraph graph tying the steps together; never raises |
 | `src/logging_store.py` | SQLite decision log, customer name and ID masked; kill-switch events |
 | `src/control.py` | Kill switch command: pause, resume, status |
+| `src/api.py` | FastAPI: `POST /tickets` (one ticket through the same pipeline), `GET /health` (kill-switch state, models), `GET /metrics` (Prometheus) |
+| `monitoring/` | Prometheus config, Grafana data source and dashboard (tickets by channel/outcome, auto vs escalated, latency p50/p95, guardrail blocks, confidence distribution), start script |
 | `evaluation/harness.py` | One command over any ticket file; writes results and report |
 | `evaluation/metrics.py` | Volume, business, technical and governance figures |
 | `prompts/` | Prompt texts with versions and the register |

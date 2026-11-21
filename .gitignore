@@ -30,3 +30,6 @@ analysis/
 
 # Evaluation runs: reports and results are committed, the per-run log database is not
 evaluation/results/**/decisions.db
+
+# Local monitoring binaries (Prometheus, Grafana) and their data
+tools/
