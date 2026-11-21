@@ -4,14 +4,14 @@
   "schemaVersion": 39,
   "refresh": "10s",
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "panels": [
     {
       "id": 1,
-      "title": "Tickets per hour by channel and outcome",
-      "type": "timeseries",
+      "title": "Tickets by channel and outcome (since the API started)",
+      "type": "bargauge",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -25,14 +25,24 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (channel, outcome) (rate(tickets_processed_total[5m])) * 3600",
+          "expr": "sum by (channel, outcome) (tickets_processed_total)",
           "legendFormat": "{{channel}} / {{outcome}}",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
-          }
+          },
+          "instant": true
         }
-      ]
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      }
     },
     {
       "id": 2,
@@ -56,7 +66,8 @@
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
-          }
+          },
+          "instant": true
         }
       ],
       "options": {
@@ -76,8 +87,8 @@
     },
     {
       "id": 3,
-      "title": "Response latency p50 / p95 (seconds)",
-      "type": "timeseries",
+      "title": "Response time p50 / p95, last hour (seconds)",
+      "type": "stat",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -91,28 +102,45 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(response_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (increase(response_seconds_bucket[1h])))",
           "legendFormat": "p50",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
-          }
+          },
+          "instant": true
         },
         {
           "refId": "B",
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(response_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (increase(response_seconds_bucket[1h])))",
           "legendFormat": "p95",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
-          }
+          },
+          "instant": true
         }
-      ]
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "value_and_name"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 1
+        },
+        "overrides": []
+      }
     },
     {
       "id": 4,
-      "title": "Guardrail activations by guardrail",
-      "type": "timeseries",
+      "title": "Guardrail blocks by guardrail (since the API started)",
+      "type": "bargauge",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -126,18 +154,28 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (guardrail) (increase(guardrail_blocks_total[5m]))",
+          "expr": "sum by (guardrail) (guardrail_blocks_total)",
           "legendFormat": "{{guardrail}}",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
-          }
+          },
+          "instant": true
         }
-      ]
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      }
     },
     {
       "id": 5,
-      "title": "Confidence distribution (drift shows here first)",
+      "title": "Confidence distribution, cumulative (drift shows here first)",
       "type": "bargauge",
       "datasource": {
         "type": "prometheus",
@@ -153,11 +191,12 @@
         {
           "refId": "A",
           "expr": "sum by (le) (classification_confidence_bucket)",
-          "legendFormat": "{{le}}",
+          "legendFormat": "\u2264 {{le}}",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "instant": true,
           "format": "heatmap"
         }
       ],

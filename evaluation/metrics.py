@@ -33,7 +33,13 @@ def compute(results: list[dict], log_rows: int, tickets_in: int) -> dict:
     auto = [r for r in results if r["action"] == "auto_respond"]
     esc = [r for r in results if r["action"] == "escalate"]
     lat = sorted(r["latency_ms"] for r in results)
+    # Time to first reply (Evaluation Framework): for an automatic answer it is the
+    # processing time; an escalated ticket's reply comes from a person, outside this run.
+    reply_s = [r["latency_ms"] / 1000 for r in auto]
     m = {
+        "reply_mean_s": float(np.mean(reply_s)) if reply_s else None,
+        "reply_median_s": float(np.median(reply_s)) if reply_s else None,
+        "reply_p95_s": float(np.percentile(reply_s, 95)) if reply_s else None,
         "tickets_in": tickets_in, "results_out": n, "log_rows": log_rows,
         "reconciled": tickets_in == n == log_rows,
         "errors": sum(1 for r in results if r["error"]),
@@ -108,10 +114,21 @@ def render(m: dict, meta: dict) -> str:
          f"→ **{'reconciled' if m['reconciled'] else 'MISMATCH'}**",
          f"- Tickets that raised an error (escalated, still logged): {m['errors']}", "",
          "## 2. Business outcomes", "",
-         f"- Answered automatically: {m['auto']} ({_pct(m['auto'], m['results_out'])}); "
-         f"escalated: {m['escalated']} (**{m['escalation_rate']:.1%}**, target ≤ 30%, baseline 58%)",
-         f"- First contact resolution proxy (not escalated): {_pct(m['auto'], m['results_out'])} "
-         f"(target ≥ 65%, baseline 42%)"]
+         "Targets and baselines from the Evaluation Framework, tier one.", "",
+         f"- First contact resolution (closed with no human; here: answered automatically): "
+         f"**{_pct(m['auto'], m['results_out'])}** ({m['auto']} tickets; target ≥ 60%, baseline 42%; "
+         f"Brief section 1 says 65%). An upper bound: it assumes every automatic reply solved the issue",
+         f"- Escalation rate (passed to a person): **{m['escalation_rate']:.1%}** ({m['escalated']} tickets; "
+         f"target ≤ 30%, baseline 58%)",
+         "- Time to first reply, automatic answers: " +
+         (f"mean {m['reply_mean_s']:.1f} s, median {m['reply_median_s']:.1f} s, p95 {m['reply_p95_s']:.1f} s"
+          if m["reply_mean_s"] is not None else "none sent") +
+         " (target under 5 minutes, baseline 8 to 12 hours). Escalated tickets wait for a person; "
+         "that time is outside this run",
+         "- Customer satisfaction (target ≥ 4.0, baseline 3.2): not computed by the harness; measured by "
+         "human review of a sample of sent replies against a rubric (see the report for sample, rubric "
+         "and scorer)",
+         "- Repeat contacts (target: halved): not measurable in an offline run, which sees each ticket once"]
     if m["labelled"]:
         L += [f"- Labels escalate {m['label_escalation_rate']:.1%} of these tickets",
               f"- Avoidable escalations (labels say auto, system escalated): {m['avoidable_escalations']}"]

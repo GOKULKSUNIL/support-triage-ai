@@ -1,0 +1,11 @@
+== 2026-11-21T20:12:40Z clone
+e936ead Add the FastAPI service with Prometheus metrics and a Grafana dashboard
+== README setup
+== provider check
+llm      model: openai/gpt-oss-20b  reply: ready  latency: 0.66s
+fallback model: openai/gpt-oss-120b  reply: ready  latency: 0.51s
+== tests
+64 passed in 38.54s
+== 2026-11-21T20:13:57Z gate run start
+== 2026-11-21T20:34:56Z gate run exit=0
+Done: 80 tickets, reconciled=True. Report: evaluation/results/2026-11-22-validation-run3/metrics_report.md
