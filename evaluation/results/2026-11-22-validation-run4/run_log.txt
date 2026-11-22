@@ -1,0 +1,100 @@
+Run 4 started 2026-11-22T10:25:51Z from the working tree: commit 0b5ee30 plus uncommitted changes:
+ M docs/architecture.md
+ M prompts/README.md
+ M prompts/build/PR-02.md
+ M src/guardrails.py
+ M src/monitoring.py
+ M src/pipeline.py
+ M tests/test_guardrails.py
+?? evaluation/fairness.py
+?? evaluation/human_review.py
+?? evaluation/results/2026-11-22-fairness-run3/
+?? evaluation/results/2026-11-22-human-review/
+?? evaluation/results/2026-11-22-validation-run4/
+?? tests/test_fairness.py
+
+78 passed in 9.26s
+W1122 15:56:04.336000 84582 .venv/lib/python3.11/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 23541.68it/s]
+[1/80] VAL-0001 escalate
+[2/80] VAL-0002 escalate
+[3/80] VAL-0003 escalate
+[4/80] VAL-0004 auto_respond
+[5/80] VAL-0005 escalate
+[6/80] VAL-0006 auto_respond
+[7/80] VAL-0007 escalate
+[8/80] VAL-0008 auto_respond
+[9/80] VAL-0009 escalate
+[10/80] VAL-0010 auto_respond
+[11/80] VAL-0011 auto_respond
+[12/80] VAL-0012 auto_respond
+[13/80] VAL-0013 auto_respond
+[14/80] VAL-0014 auto_respond
+[15/80] VAL-0015 escalate
+[16/80] VAL-0016 auto_respond
+[17/80] VAL-0017 escalate
+[18/80] VAL-0018 auto_respond
+[19/80] VAL-0019 auto_respond
+[20/80] VAL-0020 escalate
+[21/80] VAL-0021 auto_respond
+[22/80] VAL-0022 escalate
+[23/80] VAL-0023 auto_respond
+[24/80] VAL-0024 escalate
+[25/80] VAL-0025 auto_respond
+[26/80] VAL-0026 escalate
+[27/80] VAL-0027 escalate
+[28/80] VAL-0028 auto_respond
+[29/80] VAL-0029 escalate
+[30/80] VAL-0030 escalate
+[31/80] VAL-0031 escalate
+[32/80] VAL-0032 escalate
+[33/80] VAL-0033 auto_respond
+[34/80] VAL-0034 auto_respond
+[35/80] VAL-0035 escalate
+[36/80] VAL-0036 auto_respond
+[37/80] VAL-0037 escalate
+[38/80] VAL-0038 escalate
+[39/80] VAL-0039 auto_respond
+[40/80] VAL-0040 auto_respond
+[41/80] VAL-0041 auto_respond
+[42/80] VAL-0042 escalate
+[43/80] VAL-0043 escalate
+[44/80] VAL-0044 auto_respond
+[45/80] VAL-0045 escalate
+[46/80] VAL-0046 auto_respond
+[47/80] VAL-0047 escalate
+[48/80] VAL-0048 escalate
+[49/80] VAL-0049 escalate
+[50/80] VAL-0050 auto_respond
+[51/80] VAL-0051 auto_respond
+[52/80] VAL-0052 auto_respond
+[53/80] VAL-0053 auto_respond
+[54/80] VAL-0054 escalate
+[55/80] VAL-0055 auto_respond
+[56/80] VAL-0056 auto_respond
+[57/80] VAL-0057 auto_respond
+[58/80] VAL-0058 auto_respond
+[59/80] VAL-0059 auto_respond
+[60/80] VAL-0060 auto_respond
+[61/80] VAL-0061 auto_respond
+[62/80] VAL-0062 auto_respond
+[63/80] VAL-0063 auto_respond
+[64/80] VAL-0064 auto_respond
+[65/80] VAL-0065 auto_respond
+[66/80] VAL-0066 escalate
+[67/80] VAL-0067 escalate
+[68/80] VAL-0068 escalate
+[69/80] VAL-0069 escalate
+[70/80] VAL-0070 auto_respond
+[71/80] VAL-0071 auto_respond
+[72/80] VAL-0072 auto_respond
+[73/80] VAL-0073 auto_respond
+[74/80] VAL-0074 auto_respond
+[75/80] VAL-0075 escalate
+[76/80] VAL-0076 escalate
+[77/80] VAL-0077 auto_respond
+[78/80] VAL-0078 auto_respond
+[79/80] VAL-0079 escalate
+[80/80] VAL-0080 auto_respond
+Done: 80 tickets, reconciled=True. Report: evaluation/results/2026-11-22-validation-run4/metrics_report.md
+Finished 2026-11-22T10:46:07Z
