@@ -1,0 +1,16 @@
+review_id,ticket_id,results_file
+R01,VAL-0008,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R02,VAL-0016,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R03,VAL-0025,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R04,VAL-0034,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R05,VAL-0039,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R06,VAL-0040,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R07,VAL-0046,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R08,VAL-0051,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R09,VAL-0052,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R10,VAL-0053,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R11,VAL-0058,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R12,VAL-0059,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R13,VAL-0060,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R14,VAL-0061,evaluation/results/2026-11-22-validation-run4/results.jsonl
+R15,VAL-0073,evaluation/results/2026-11-22-validation-run4/results.jsonl

@@ -1,0 +1,1623 @@
+review_id,sentence_no,ticket,sentence,cited_passage,cited_passage_text,other_passages,cited_supports,any_passage_supports
+R01,1,"
+We are tightening permissions after a review and I want to understand how group membership interacts with directly assigned roles.",A group membership grants broader access than the direct role suggests.,DOC-ACCT-001#common-causes,"Managing team members, roles and permissions
+Common causes
+- The role was granted at project scope rather than organisation scope
+- The invitation was never accepted and the account does not exist
+- A group membership grants broader access than the direct role suggests","[DOC-ACCT-001#resolution] Managing team members, roles and permissions
+Resolution
+1. Check the effective permissions view for the user, which resolves direct roles and group memberships together.
+2. Confirm the invitation was accepted. Pending invitations appear in a separate section and expire after seven days.
+3. Remove a departing user rather than only changing their password, and revoke any API keys they created.
+4. Prefer group membership to direct role assignment, so that access can be reviewed in one place.
+
+[DOC-ACCT-001#symptoms] Managing team members, roles and permissions
+Symptoms
+- A user cannot access a project they should be able to
+- A departing user needs removing
+- Permissions need narrowing after a review",Y,
+R01,2,,The effective permissions view resolves direct roles and group memberships together.,DOC-ACCT-001#resolution,"Managing team members, roles and permissions
+Resolution
+1. Check the effective permissions view for the user, which resolves direct roles and group memberships together.
+2. Confirm the invitation was accepted. Pending invitations appear in a separate section and expire after seven days.
+3. Remove a departing user rather than only changing their password, and revoke any API keys they created.
+4. Prefer group membership to direct role assignment, so that access can be reviewed in one place.","[DOC-ACCT-001#common-causes] Managing team members, roles and permissions
+Common causes
+- The role was granted at project scope rather than organisation scope
+- The invitation was never accepted and the account does not exist
+- A group membership grants broader access than the direct role suggests
+
+[DOC-ACCT-001#symptoms] Managing team members, roles and permissions
+Symptoms
+- A user cannot access a project they should be able to
+- A departing user needs removing
+- Permissions need narrowing after a review",Y,
+R01,3,,Prefer group membership to direct role assignment so that access can be reviewed in one place.,DOC-ACCT-001#resolution,"Managing team members, roles and permissions
+Resolution
+1. Check the effective permissions view for the user, which resolves direct roles and group memberships together.
+2. Confirm the invitation was accepted. Pending invitations appear in a separate section and expire after seven days.
+3. Remove a departing user rather than only changing their password, and revoke any API keys they created.
+4. Prefer group membership to direct role assignment, so that access can be reviewed in one place.","[DOC-ACCT-001#common-causes] Managing team members, roles and permissions
+Common causes
+- The role was granted at project scope rather than organisation scope
+- The invitation was never accepted and the account does not exist
+- A group membership grants broader access than the direct role suggests
+
+[DOC-ACCT-001#symptoms] Managing team members, roles and permissions
+Symptoms
+- A user cannot access a project they should be able to
+- A departing user needs removing
+- Permissions need narrowing after a review",Y,
+R02,1,"
+The service is noticeably slow during our afternoon peak and fine the rest of the day. We have autoscaling enabled so I expected it to cope.",One common cause of elevated latency is that the instance count is not scaling with the load pattern.,DOC-PERF-001#common-causes,"Diagnosing elevated response latency
+Common causes
+- The service is running close to its memory limit and spending time in garbage collection
+- A downstream dependency has slowed and the delay is propagating
+- Instance count is not scaling with the load pattern","[DOC-PERF-001#resolution] Diagnosing elevated response latency
+Resolution
+1. Compare median and 95th percentile latency on the metrics page. A large gap points to contention or queueing rather than a uniformly slower service.
+2. Check memory utilisation across instances. Sustained utilisation above eighty per cent typically shows up as latency before it shows up as failure.
+3. Review the dependency timing breakdown on the trace view to identify whether the time is being spent in your service or waiting on another.
+4. Adjust the autoscaling policy if load is predictable. Scaling on request count responds sooner than scaling on processor utilisation.
+
+[DOC-PERF-002#resolution] Autoscaling behaviour and instance limits
+Resolution
+1. Check whether the service is sitting at its configured maximum. Scaling stops there regardless of load.
+2. Choose a scaling metric that reflects the pressure you actually face. Request concurrency reacts faster than processor utilisation for request-bound services.
+3. Set the cooldown longer than your startup time so that new instances are counted before another scaling decision is taken.
+4. Set a minimum instance count above zero for latency-sensitive services to avoid cold starts on the first request.
+
+[DOC-PERF-002#symptoms] Autoscaling behaviour and instance limits
+Symptoms
+- The service does not scale up under load
+- Scaling happens later than expected
+- Instance count oscillates
+
+[DOC-PERF-002#notes] Autoscaling behaviour and instance limits
+Notes
+Scaling decisions are evaluated every fifteen seconds. Very short traffic spikes will finish before scaling responds.",Y,
+R02,2,,You should compare median and 95th percentile latency on the metrics page; a large gap indicates contention or queueing.,DOC-PERF-001#resolution,"Diagnosing elevated response latency
+Resolution
+1. Compare median and 95th percentile latency on the metrics page. A large gap points to contention or queueing rather than a uniformly slower service.
+2. Check memory utilisation across instances. Sustained utilisation above eighty per cent typically shows up as latency before it shows up as failure.
+3. Review the dependency timing breakdown on the trace view to identify whether the time is being spent in your service or waiting on another.
+4. Adjust the autoscaling policy if load is predictable. Scaling on request count responds sooner than scaling on processor utilisation.","[DOC-PERF-001#common-causes] Diagnosing elevated response latency
+Common causes
+- The service is running close to its memory limit and spending time in garbage collection
+- A downstream dependency has slowed and the delay is propagating
+- Instance count is not scaling with the load pattern
+
+[DOC-PERF-002#resolution] Autoscaling behaviour and instance limits
+Resolution
+1. Check whether the service is sitting at its configured maximum. Scaling stops there regardless of load.
+2. Choose a scaling metric that reflects the pressure you actually face. Request concurrency reacts faster than processor utilisation for request-bound services.
+3. Set the cooldown longer than your startup time so that new instances are counted before another scaling decision is taken.
+4. Set a minimum instance count above zero for latency-sensitive services to avoid cold starts on the first request.
+
+[DOC-PERF-002#symptoms] Autoscaling behaviour and instance limits
+Symptoms
+- The service does not scale up under load
+- Scaling happens later than expected
+- Instance count oscillates
+
+[DOC-PERF-002#notes] Autoscaling behaviour and instance limits
+Notes
+Scaling decisions are evaluated every fifteen seconds. Very short traffic spikes will finish before scaling responds.",Y,
+R02,3,,Check memory utilisation across instances; sustained utilisation above eighty per cent can cause latency before failures appear.,DOC-PERF-001#resolution,"Diagnosing elevated response latency
+Resolution
+1. Compare median and 95th percentile latency on the metrics page. A large gap points to contention or queueing rather than a uniformly slower service.
+2. Check memory utilisation across instances. Sustained utilisation above eighty per cent typically shows up as latency before it shows up as failure.
+3. Review the dependency timing breakdown on the trace view to identify whether the time is being spent in your service or waiting on another.
+4. Adjust the autoscaling policy if load is predictable. Scaling on request count responds sooner than scaling on processor utilisation.","[DOC-PERF-001#common-causes] Diagnosing elevated response latency
+Common causes
+- The service is running close to its memory limit and spending time in garbage collection
+- A downstream dependency has slowed and the delay is propagating
+- Instance count is not scaling with the load pattern
+
+[DOC-PERF-002#resolution] Autoscaling behaviour and instance limits
+Resolution
+1. Check whether the service is sitting at its configured maximum. Scaling stops there regardless of load.
+2. Choose a scaling metric that reflects the pressure you actually face. Request concurrency reacts faster than processor utilisation for request-bound services.
+3. Set the cooldown longer than your startup time so that new instances are counted before another scaling decision is taken.
+4. Set a minimum instance count above zero for latency-sensitive services to avoid cold starts on the first request.
+
+[DOC-PERF-002#symptoms] Autoscaling behaviour and instance limits
+Symptoms
+- The service does not scale up under load
+- Scaling happens later than expected
+- Instance count oscillates
+
+[DOC-PERF-002#notes] Autoscaling behaviour and instance limits
+Notes
+Scaling decisions are evaluated every fifteen seconds. Very short traffic spikes will finish before scaling responds.",Y,
+R02,4,,Review the dependency timing breakdown on the trace view to see if time is spent in your service or a downstream dependency.,DOC-PERF-001#resolution,"Diagnosing elevated response latency
+Resolution
+1. Compare median and 95th percentile latency on the metrics page. A large gap points to contention or queueing rather than a uniformly slower service.
+2. Check memory utilisation across instances. Sustained utilisation above eighty per cent typically shows up as latency before it shows up as failure.
+3. Review the dependency timing breakdown on the trace view to identify whether the time is being spent in your service or waiting on another.
+4. Adjust the autoscaling policy if load is predictable. Scaling on request count responds sooner than scaling on processor utilisation.","[DOC-PERF-001#common-causes] Diagnosing elevated response latency
+Common causes
+- The service is running close to its memory limit and spending time in garbage collection
+- A downstream dependency has slowed and the delay is propagating
+- Instance count is not scaling with the load pattern
+
+[DOC-PERF-002#resolution] Autoscaling behaviour and instance limits
+Resolution
+1. Check whether the service is sitting at its configured maximum. Scaling stops there regardless of load.
+2. Choose a scaling metric that reflects the pressure you actually face. Request concurrency reacts faster than processor utilisation for request-bound services.
+3. Set the cooldown longer than your startup time so that new instances are counted before another scaling decision is taken.
+4. Set a minimum instance count above zero for latency-sensitive services to avoid cold starts on the first request.
+
+[DOC-PERF-002#symptoms] Autoscaling behaviour and instance limits
+Symptoms
+- The service does not scale up under load
+- Scaling happens later than expected
+- Instance count oscillates
+
+[DOC-PERF-002#notes] Autoscaling behaviour and instance limits
+Notes
+Scaling decisions are evaluated every fifteen seconds. Very short traffic spikes will finish before scaling responds.",Y,
+R02,5,,"Verify that the service is not already at its configured maximum instance count, as scaling stops there regardless of load.",DOC-PERF-002#resolution,"Autoscaling behaviour and instance limits
+Resolution
+1. Check whether the service is sitting at its configured maximum. Scaling stops there regardless of load.
+2. Choose a scaling metric that reflects the pressure you actually face. Request concurrency reacts faster than processor utilisation for request-bound services.
+3. Set the cooldown longer than your startup time so that new instances are counted before another scaling decision is taken.
+4. Set a minimum instance count above zero for latency-sensitive services to avoid cold starts on the first request.","[DOC-PERF-001#common-causes] Diagnosing elevated response latency
+Common causes
+- The service is running close to its memory limit and spending time in garbage collection
+- A downstream dependency has slowed and the delay is propagating
+- Instance count is not scaling with the load pattern
+
+[DOC-PERF-001#resolution] Diagnosing elevated response latency
+Resolution
+1. Compare median and 95th percentile latency on the metrics page. A large gap points to contention or queueing rather than a uniformly slower service.
+2. Check memory utilisation across instances. Sustained utilisation above eighty per cent typically shows up as latency before it shows up as failure.
+3. Review the dependency timing breakdown on the trace view to identify whether the time is being spent in your service or waiting on another.
+4. Adjust the autoscaling policy if load is predictable. Scaling on request count responds sooner than scaling on processor utilisation.
+
+[DOC-PERF-002#symptoms] Autoscaling behaviour and instance limits
+Symptoms
+- The service does not scale up under load
+- Scaling happens later than expected
+- Instance count oscillates
+
+[DOC-PERF-002#notes] Autoscaling behaviour and instance limits
+Notes
+Scaling decisions are evaluated every fifteen seconds. Very short traffic spikes will finish before scaling responds.",Y,
+R02,6,,Consider adjusting the autoscaling policy to use a faster‑responding metric such as request count and set a minimum instance count above zero for latency‑sensitive services.,DOC-PERF-002#resolution,"Autoscaling behaviour and instance limits
+Resolution
+1. Check whether the service is sitting at its configured maximum. Scaling stops there regardless of load.
+2. Choose a scaling metric that reflects the pressure you actually face. Request concurrency reacts faster than processor utilisation for request-bound services.
+3. Set the cooldown longer than your startup time so that new instances are counted before another scaling decision is taken.
+4. Set a minimum instance count above zero for latency-sensitive services to avoid cold starts on the first request.","[DOC-PERF-001#common-causes] Diagnosing elevated response latency
+Common causes
+- The service is running close to its memory limit and spending time in garbage collection
+- A downstream dependency has slowed and the delay is propagating
+- Instance count is not scaling with the load pattern
+
+[DOC-PERF-001#resolution] Diagnosing elevated response latency
+Resolution
+1. Compare median and 95th percentile latency on the metrics page. A large gap points to contention or queueing rather than a uniformly slower service.
+2. Check memory utilisation across instances. Sustained utilisation above eighty per cent typically shows up as latency before it shows up as failure.
+3. Review the dependency timing breakdown on the trace view to identify whether the time is being spent in your service or waiting on another.
+4. Adjust the autoscaling policy if load is predictable. Scaling on request count responds sooner than scaling on processor utilisation.
+
+[DOC-PERF-002#symptoms] Autoscaling behaviour and instance limits
+Symptoms
+- The service does not scale up under load
+- Scaling happens later than expected
+- Instance count oscillates
+
+[DOC-PERF-002#notes] Autoscaling behaviour and instance limits
+Notes
+Scaling decisions are evaluated every fifteen seconds. Very short traffic spikes will finish before scaling responds.",N,Y
+R03,1,"
+every deployment fails at health check stage. i am having increase timeout twice already and it makes no difference. kindly check and revert.","The deployment reaches running and then rolls back, and logs show repeated health check timeouts.",DOC-DEPLOY-001#symptoms,"Container deployments failing during the health check phase
+Symptoms
+- The deployment reaches running and then rolls back
+- Logs show repeated health check timeouts
+- The service works locally but not when deployed","[DOC-DEPLOY-001#common-causes] Container deployments failing during the health check phase
+Common causes
+- The health endpoint takes longer to respond than the configured timeout
+- The container listens on a different port than the service declares
+- A required environment variable is absent in the deployed environment
+
+[DOC-DEPLOY-001#resolution] Container deployments failing during the health check phase
+Resolution
+1. Confirm the container is listening on the port declared in the service definition. A mismatch here produces a health check failure that looks like a timeout.
+2. Increase the initial delay if the application needs time to warm up before it can answer. Thirty seconds is a reasonable starting point for services that load models or caches.
+3. Compare the environment variables present in the deployment against those the application requires. Missing configuration frequently causes a silent startup failure.
+4. Inspect the container logs from the failed revision rather than the running one; the rollback replaces the logs shown by default.
+
+[DOC-DEPLOY-001#notes] Container deployments failing during the health check phase
+Notes
+A health check must return within the timeout using only local state. Endpoints that call a database will fail during a database incident and take the service down with them.
+
+[DOC-ONB-001#symptoms] First deployment: a walkthrough
+Symptoms
+- A new user does not know where to begin
+- The first deployment fails for unclear reasons",Y,
+R03,2,,A common cause is that the health endpoint takes longer to respond than the configured timeout.,DOC-DEPLOY-001#common-causes,"Container deployments failing during the health check phase
+Common causes
+- The health endpoint takes longer to respond than the configured timeout
+- The container listens on a different port than the service declares
+- A required environment variable is absent in the deployed environment","[DOC-DEPLOY-001#symptoms] Container deployments failing during the health check phase
+Symptoms
+- The deployment reaches running and then rolls back
+- Logs show repeated health check timeouts
+- The service works locally but not when deployed
+
+[DOC-DEPLOY-001#resolution] Container deployments failing during the health check phase
+Resolution
+1. Confirm the container is listening on the port declared in the service definition. A mismatch here produces a health check failure that looks like a timeout.
+2. Increase the initial delay if the application needs time to warm up before it can answer. Thirty seconds is a reasonable starting point for services that load models or caches.
+3. Compare the environment variables present in the deployment against those the application requires. Missing configuration frequently causes a silent startup failure.
+4. Inspect the container logs from the failed revision rather than the running one; the rollback replaces the logs shown by default.
+
+[DOC-DEPLOY-001#notes] Container deployments failing during the health check phase
+Notes
+A health check must return within the timeout using only local state. Endpoints that call a database will fail during a database incident and take the service down with them.
+
+[DOC-ONB-001#symptoms] First deployment: a walkthrough
+Symptoms
+- A new user does not know where to begin
+- The first deployment fails for unclear reasons",Y,
+R03,3,,Another common cause is that the container listens on a different port than the service declares.,DOC-DEPLOY-001#common-causes,"Container deployments failing during the health check phase
+Common causes
+- The health endpoint takes longer to respond than the configured timeout
+- The container listens on a different port than the service declares
+- A required environment variable is absent in the deployed environment","[DOC-DEPLOY-001#symptoms] Container deployments failing during the health check phase
+Symptoms
+- The deployment reaches running and then rolls back
+- Logs show repeated health check timeouts
+- The service works locally but not when deployed
+
+[DOC-DEPLOY-001#resolution] Container deployments failing during the health check phase
+Resolution
+1. Confirm the container is listening on the port declared in the service definition. A mismatch here produces a health check failure that looks like a timeout.
+2. Increase the initial delay if the application needs time to warm up before it can answer. Thirty seconds is a reasonable starting point for services that load models or caches.
+3. Compare the environment variables present in the deployment against those the application requires. Missing configuration frequently causes a silent startup failure.
+4. Inspect the container logs from the failed revision rather than the running one; the rollback replaces the logs shown by default.
+
+[DOC-DEPLOY-001#notes] Container deployments failing during the health check phase
+Notes
+A health check must return within the timeout using only local state. Endpoints that call a database will fail during a database incident and take the service down with them.
+
+[DOC-ONB-001#symptoms] First deployment: a walkthrough
+Symptoms
+- A new user does not know where to begin
+- The first deployment fails for unclear reasons",Y,
+R03,4,,"Resolution steps include confirming the container is listening on the declared port, increasing the initial delay if the application needs time to warm up, comparing required environment variables, and inspecting the container logs from the failed revision.",DOC-DEPLOY-001#resolution,"Container deployments failing during the health check phase
+Resolution
+1. Confirm the container is listening on the port declared in the service definition. A mismatch here produces a health check failure that looks like a timeout.
+2. Increase the initial delay if the application needs time to warm up before it can answer. Thirty seconds is a reasonable starting point for services that load models or caches.
+3. Compare the environment variables present in the deployment against those the application requires. Missing configuration frequently causes a silent startup failure.
+4. Inspect the container logs from the failed revision rather than the running one; the rollback replaces the logs shown by default.","[DOC-DEPLOY-001#symptoms] Container deployments failing during the health check phase
+Symptoms
+- The deployment reaches running and then rolls back
+- Logs show repeated health check timeouts
+- The service works locally but not when deployed
+
+[DOC-DEPLOY-001#common-causes] Container deployments failing during the health check phase
+Common causes
+- The health endpoint takes longer to respond than the configured timeout
+- The container listens on a different port than the service declares
+- A required environment variable is absent in the deployed environment
+
+[DOC-DEPLOY-001#notes] Container deployments failing during the health check phase
+Notes
+A health check must return within the timeout using only local state. Endpoints that call a database will fail during a database incident and take the service down with them.
+
+[DOC-ONB-001#symptoms] First deployment: a walkthrough
+Symptoms
+- A new user does not know where to begin
+- The first deployment fails for unclear reasons",Y,
+R03,5,,A health check must return within the timeout using only local state.,DOC-DEPLOY-001#notes,"Container deployments failing during the health check phase
+Notes
+A health check must return within the timeout using only local state. Endpoints that call a database will fail during a database incident and take the service down with them.","[DOC-DEPLOY-001#symptoms] Container deployments failing during the health check phase
+Symptoms
+- The deployment reaches running and then rolls back
+- Logs show repeated health check timeouts
+- The service works locally but not when deployed
+
+[DOC-DEPLOY-001#common-causes] Container deployments failing during the health check phase
+Common causes
+- The health endpoint takes longer to respond than the configured timeout
+- The container listens on a different port than the service declares
+- A required environment variable is absent in the deployed environment
+
+[DOC-DEPLOY-001#resolution] Container deployments failing during the health check phase
+Resolution
+1. Confirm the container is listening on the port declared in the service definition. A mismatch here produces a health check failure that looks like a timeout.
+2. Increase the initial delay if the application needs time to warm up before it can answer. Thirty seconds is a reasonable starting point for services that load models or caches.
+3. Compare the environment variables present in the deployment against those the application requires. Missing configuration frequently causes a silent startup failure.
+4. Inspect the container logs from the failed revision rather than the running one; the rollback replaces the logs shown by default.
+
+[DOC-ONB-001#symptoms] First deployment: a walkthrough
+Symptoms
+- A new user does not know where to begin
+- The first deployment fails for unclear reasons",Y,
+R04,1,"Need to roll back the latest release
+How do I revert to an earlier revision? The release we put out this morning is causing errors and I would rather roll back than try to fix forward.",A release has introduced errors and must be reverted.,DOC-DEPLOY-002#symptoms,"Rolling back a failed release
+Symptoms
+- A release has introduced errors and must be reverted
+- The previous revision is needed while a fix is prepared","[DOC-DEPLOY-002#resolution] Rolling back a failed release
+Resolution
+1. Open the revisions page for the service and identify the last revision that was healthy.
+2. Select roll back on that revision. Traffic moves within roughly thirty seconds and no rebuild takes place.
+3. If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.
+4. Record the incident and the reason for the rollback before deploying a fix, while the detail is still fresh.
+
+[DOC-DEPLOY-002#notes] Rolling back a failed release
+Notes
+Rollback restores the container image and its configuration together. It does not restore data.
+
+[DOC-DEPLOY-002#common-causes] Rolling back a failed release
+Common causes
+- A defect reached production that testing did not catch
+- A configuration change had unintended effects",Y,
+R04,2,,Open the revisions page for the service and identify the last revision that was healthy.,DOC-DEPLOY-002#resolution,"Rolling back a failed release
+Resolution
+1. Open the revisions page for the service and identify the last revision that was healthy.
+2. Select roll back on that revision. Traffic moves within roughly thirty seconds and no rebuild takes place.
+3. If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.
+4. Record the incident and the reason for the rollback before deploying a fix, while the detail is still fresh.","[DOC-DEPLOY-002#symptoms] Rolling back a failed release
+Symptoms
+- A release has introduced errors and must be reverted
+- The previous revision is needed while a fix is prepared
+
+[DOC-DEPLOY-002#notes] Rolling back a failed release
+Notes
+Rollback restores the container image and its configuration together. It does not restore data.
+
+[DOC-DEPLOY-002#common-causes] Rolling back a failed release
+Common causes
+- A defect reached production that testing did not catch
+- A configuration change had unintended effects",Y,
+R04,3,,Select roll back on that revision; traffic moves within roughly thirty seconds and no rebuild takes place.,DOC-DEPLOY-002#resolution,"Rolling back a failed release
+Resolution
+1. Open the revisions page for the service and identify the last revision that was healthy.
+2. Select roll back on that revision. Traffic moves within roughly thirty seconds and no rebuild takes place.
+3. If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.
+4. Record the incident and the reason for the rollback before deploying a fix, while the detail is still fresh.","[DOC-DEPLOY-002#symptoms] Rolling back a failed release
+Symptoms
+- A release has introduced errors and must be reverted
+- The previous revision is needed while a fix is prepared
+
+[DOC-DEPLOY-002#notes] Rolling back a failed release
+Notes
+Rollback restores the container image and its configuration together. It does not restore data.
+
+[DOC-DEPLOY-002#common-causes] Rolling back a failed release
+Common causes
+- A defect reached production that testing did not catch
+- A configuration change had unintended effects",Y,
+R04,4,,"If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.",DOC-DEPLOY-002#resolution,"Rolling back a failed release
+Resolution
+1. Open the revisions page for the service and identify the last revision that was healthy.
+2. Select roll back on that revision. Traffic moves within roughly thirty seconds and no rebuild takes place.
+3. If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.
+4. Record the incident and the reason for the rollback before deploying a fix, while the detail is still fresh.","[DOC-DEPLOY-002#symptoms] Rolling back a failed release
+Symptoms
+- A release has introduced errors and must be reverted
+- The previous revision is needed while a fix is prepared
+
+[DOC-DEPLOY-002#notes] Rolling back a failed release
+Notes
+Rollback restores the container image and its configuration together. It does not restore data.
+
+[DOC-DEPLOY-002#common-causes] Rolling back a failed release
+Common causes
+- A defect reached production that testing did not catch
+- A configuration change had unintended effects",Y,
+R04,5,,Record the incident and the reason for the rollback before deploying a fix.,DOC-DEPLOY-002#resolution,"Rolling back a failed release
+Resolution
+1. Open the revisions page for the service and identify the last revision that was healthy.
+2. Select roll back on that revision. Traffic moves within roughly thirty seconds and no rebuild takes place.
+3. If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.
+4. Record the incident and the reason for the rollback before deploying a fix, while the detail is still fresh.","[DOC-DEPLOY-002#symptoms] Rolling back a failed release
+Symptoms
+- A release has introduced errors and must be reverted
+- The previous revision is needed while a fix is prepared
+
+[DOC-DEPLOY-002#notes] Rolling back a failed release
+Notes
+Rollback restores the container image and its configuration together. It does not restore data.
+
+[DOC-DEPLOY-002#common-causes] Rolling back a failed release
+Common causes
+- A defect reached production that testing did not catch
+- A configuration change had unintended effects",Y,
+R04,6,,"Rollback restores the container image and its configuration together, but does not restore data.",DOC-DEPLOY-002#notes,"Rolling back a failed release
+Notes
+Rollback restores the container image and its configuration together. It does not restore data.","[DOC-DEPLOY-002#symptoms] Rolling back a failed release
+Symptoms
+- A release has introduced errors and must be reverted
+- The previous revision is needed while a fix is prepared
+
+[DOC-DEPLOY-002#resolution] Rolling back a failed release
+Resolution
+1. Open the revisions page for the service and identify the last revision that was healthy.
+2. Select roll back on that revision. Traffic moves within roughly thirty seconds and no rebuild takes place.
+3. If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect.
+4. Record the incident and the reason for the rollback before deploying a fix, while the detail is still fresh.
+
+[DOC-DEPLOY-002#common-causes] Rolling back a failed release
+Common causes
+- A defect reached production that testing did not catch
+- A configuration change had unintended effects",Y,
+R05,1,"API key returning 401
+One of our engineers pushed a key to a public repository by mistake. We need to replace it without taking the service down. What is the correct order of operations?","To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.",DOC-AUTH-004#resolution,"API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-SEC-001#common-causes] Responding to a suspected account compromise
+Common causes
+- Credentials were reused from a service that suffered a breach
+- An API key was committed to a public repository
+- A former team member retained access after leaving
+
+[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R05,2,,"If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.",DOC-AUTH-004#resolution,"API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-SEC-001#common-causes] Responding to a suspected account compromise
+Common causes
+- Credentials were reused from a service that suffered a breach
+- An API key was committed to a public repository
+- A former team member retained access after leaving
+
+[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R06,1,"Question about this month's charges
+There are charges on our invoice for a service I do not believe we use. Could you explain what these relate to?",The invoice shows higher charges because usage‑based charges can accrue beyond the plan allowance.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",N,N
+R06,2,,Charges can also appear if a resource was left running in a non‑production (staging or development) environment.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R06,3,,The billing period on the invoice runs from the anniversary of your subscription date rather than the calendar month.,DOC-BILL-001#resolution,"Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.","[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R06,4,,You can open the usage breakdown for the period to see charges itemised by service and environment.,DOC-BILL-001#resolution,"Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.","[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R06,5,,"Invoices are finalised three days after the period ends, and any adjustments requested before finalisation appear on the same invoice.",DOC-BILL-001#notes,"Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.","[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R07,1,"How do I page through large results
+when i do pagination some record coming two time and some missing. what is correct way?",Iterating through results can miss or duplicate records.,DOC-API-002#symptoms,"Pagination and handling large result sets
+Symptoms
+- Only the first page of results is returned
+- Iterating through results misses or duplicates records
+- Large queries time out","[DOC-API-002#common-causes] Pagination and handling large result sets
+Common causes
+- The cursor from the previous response was not passed to the next request
+- Offset pagination was used against a changing collection
+- The page size requested exceeds the maximum
+
+[DOC-API-002#resolution] Pagination and handling large result sets
+Resolution
+1. Use cursor pagination for anything that may change while you iterate. Offset pagination will skip or repeat records when items are inserted mid-iteration.
+2. Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.
+3. Keep page size at or below two hundred. Larger requests are rejected rather than truncated.
+4. For very large extracts, use the export endpoint, which runs asynchronously and returns a download link.
+
+[DOC-API-002#notes] Pagination and handling large result sets
+Notes
+Cursors expire after one hour. Long-running iterations should handle expiry by restarting from a recorded checkpoint.",Y,
+R07,2,,"This can happen if the cursor from the previous response was not passed to the next request, if offset pagination was used against a changing collection, or if the page size requested exceeds the maximum.",DOC-API-002#common-causes,"Pagination and handling large result sets
+Common causes
+- The cursor from the previous response was not passed to the next request
+- Offset pagination was used against a changing collection
+- The page size requested exceeds the maximum","[DOC-API-002#symptoms] Pagination and handling large result sets
+Symptoms
+- Only the first page of results is returned
+- Iterating through results misses or duplicates records
+- Large queries time out
+
+[DOC-API-002#resolution] Pagination and handling large result sets
+Resolution
+1. Use cursor pagination for anything that may change while you iterate. Offset pagination will skip or repeat records when items are inserted mid-iteration.
+2. Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.
+3. Keep page size at or below two hundred. Larger requests are rejected rather than truncated.
+4. For very large extracts, use the export endpoint, which runs asynchronously and returns a download link.
+
+[DOC-API-002#notes] Pagination and handling large result sets
+Notes
+Cursors expire after one hour. Long-running iterations should handle expiry by restarting from a recorded checkpoint.",Y,
+R07,3,,Use cursor pagination for anything that may change while you iterate.,DOC-API-002#resolution,"Pagination and handling large result sets
+Resolution
+1. Use cursor pagination for anything that may change while you iterate. Offset pagination will skip or repeat records when items are inserted mid-iteration.
+2. Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.
+3. Keep page size at or below two hundred. Larger requests are rejected rather than truncated.
+4. For very large extracts, use the export endpoint, which runs asynchronously and returns a download link.","[DOC-API-002#symptoms] Pagination and handling large result sets
+Symptoms
+- Only the first page of results is returned
+- Iterating through results misses or duplicates records
+- Large queries time out
+
+[DOC-API-002#common-causes] Pagination and handling large result sets
+Common causes
+- The cursor from the previous response was not passed to the next request
+- Offset pagination was used against a changing collection
+- The page size requested exceeds the maximum
+
+[DOC-API-002#notes] Pagination and handling large result sets
+Notes
+Cursors expire after one hour. Long-running iterations should handle expiry by restarting from a recorded checkpoint.",Y,
+R07,4,,"Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.",DOC-API-002#resolution,"Pagination and handling large result sets
+Resolution
+1. Use cursor pagination for anything that may change while you iterate. Offset pagination will skip or repeat records when items are inserted mid-iteration.
+2. Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.
+3. Keep page size at or below two hundred. Larger requests are rejected rather than truncated.
+4. For very large extracts, use the export endpoint, which runs asynchronously and returns a download link.","[DOC-API-002#symptoms] Pagination and handling large result sets
+Symptoms
+- Only the first page of results is returned
+- Iterating through results misses or duplicates records
+- Large queries time out
+
+[DOC-API-002#common-causes] Pagination and handling large result sets
+Common causes
+- The cursor from the previous response was not passed to the next request
+- Offset pagination was used against a changing collection
+- The page size requested exceeds the maximum
+
+[DOC-API-002#notes] Pagination and handling large result sets
+Notes
+Cursors expire after one hour. Long-running iterations should handle expiry by restarting from a recorded checkpoint.",Y,
+R07,5,,Keep page size at or below two hundred.,DOC-API-002#resolution,"Pagination and handling large result sets
+Resolution
+1. Use cursor pagination for anything that may change while you iterate. Offset pagination will skip or repeat records when items are inserted mid-iteration.
+2. Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.
+3. Keep page size at or below two hundred. Larger requests are rejected rather than truncated.
+4. For very large extracts, use the export endpoint, which runs asynchronously and returns a download link.","[DOC-API-002#symptoms] Pagination and handling large result sets
+Symptoms
+- Only the first page of results is returned
+- Iterating through results misses or duplicates records
+- Large queries time out
+
+[DOC-API-002#common-causes] Pagination and handling large result sets
+Common causes
+- The cursor from the previous response was not passed to the next request
+- Offset pagination was used against a changing collection
+- The page size requested exceeds the maximum
+
+[DOC-API-002#notes] Pagination and handling large result sets
+Notes
+Cursors expire after one hour. Long-running iterations should handle expiry by restarting from a recorded checkpoint.",Y,
+R07,6,,Cursors expire after one hour; long‑running iterations should handle expiry by restarting from a recorded checkpoint.,DOC-API-002#notes,"Pagination and handling large result sets
+Notes
+Cursors expire after one hour. Long-running iterations should handle expiry by restarting from a recorded checkpoint.","[DOC-API-002#symptoms] Pagination and handling large result sets
+Symptoms
+- Only the first page of results is returned
+- Iterating through results misses or duplicates records
+- Large queries time out
+
+[DOC-API-002#common-causes] Pagination and handling large result sets
+Common causes
+- The cursor from the previous response was not passed to the next request
+- Offset pagination was used against a changing collection
+- The page size requested exceeds the maximum
+
+[DOC-API-002#resolution] Pagination and handling large result sets
+Resolution
+1. Use cursor pagination for anything that may change while you iterate. Offset pagination will skip or repeat records when items are inserted mid-iteration.
+2. Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null.
+3. Keep page size at or below two hundred. Larger requests are rejected rather than truncated.
+4. For very large extracts, use the export endpoint, which runs asynchronously and returns a download link.",Y,
+R08,1,"Log forwarding stopped working
+log forwarding to our external system stop two days ago and not resumed by itself. destination is healthy as we know. kindly check and revert.",Logs not arriving at the external destination is a known symptom of forwarding issues.,DOC-INT-002#symptoms,"Third party monitoring and log forwarding
+Symptoms
+- Logs are not arriving at the external destination
+- Metrics are delayed compared with the console
+- Forwarded volume is higher than expected","[DOC-INT-002#notes] Third party monitoring and log forwarding
+Notes
+Forwarding pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy.
+
+[DOC-INT-002#resolution] Third party monitoring and log forwarding
+Resolution
+1. Check the forwarding status page, which shows the last successful delivery and any error returned by the destination.
+2. Expect a delay of up to two minutes on metrics, since they are aggregated before being sent.
+3. Apply a level filter at source so that debug output is not forwarded, which is usually the reason volume is higher than expected.
+4. Verify the destination credential separately if delivery has stopped entirely, as expired credentials are the most common cause.
+
+[DOC-INT-002#common-causes] Third party monitoring and log forwarding
+Common causes
+- The destination rejected the payload and forwarding paused
+- Aggregation introduces a delay before metrics are forwarded
+- Debug-level logs are being forwarded along with the rest",Y,
+R08,2,,Forwarding automatically pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy.,DOC-INT-002#notes,"Third party monitoring and log forwarding
+Notes
+Forwarding pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy.","[DOC-INT-002#symptoms] Third party monitoring and log forwarding
+Symptoms
+- Logs are not arriving at the external destination
+- Metrics are delayed compared with the console
+- Forwarded volume is higher than expected
+
+[DOC-INT-002#resolution] Third party monitoring and log forwarding
+Resolution
+1. Check the forwarding status page, which shows the last successful delivery and any error returned by the destination.
+2. Expect a delay of up to two minutes on metrics, since they are aggregated before being sent.
+3. Apply a level filter at source so that debug output is not forwarded, which is usually the reason volume is higher than expected.
+4. Verify the destination credential separately if delivery has stopped entirely, as expired credentials are the most common cause.
+
+[DOC-INT-002#common-causes] Third party monitoring and log forwarding
+Common causes
+- The destination rejected the payload and forwarding paused
+- Aggregation introduces a delay before metrics are forwarded
+- Debug-level logs are being forwarded along with the rest",Y,
+R08,3,,You should check the forwarding status page to see the last successful delivery and any error returned by the destination.,DOC-INT-002#resolution,"Third party monitoring and log forwarding
+Resolution
+1. Check the forwarding status page, which shows the last successful delivery and any error returned by the destination.
+2. Expect a delay of up to two minutes on metrics, since they are aggregated before being sent.
+3. Apply a level filter at source so that debug output is not forwarded, which is usually the reason volume is higher than expected.
+4. Verify the destination credential separately if delivery has stopped entirely, as expired credentials are the most common cause.","[DOC-INT-002#symptoms] Third party monitoring and log forwarding
+Symptoms
+- Logs are not arriving at the external destination
+- Metrics are delayed compared with the console
+- Forwarded volume is higher than expected
+
+[DOC-INT-002#notes] Third party monitoring and log forwarding
+Notes
+Forwarding pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy.
+
+[DOC-INT-002#common-causes] Third party monitoring and log forwarding
+Common causes
+- The destination rejected the payload and forwarding paused
+- Aggregation introduces a delay before metrics are forwarded
+- Debug-level logs are being forwarded along with the rest",Y,
+R08,4,,"If delivery has stopped entirely, verify the destination credentials, as expired credentials are the most common cause.",DOC-INT-002#resolution,"Third party monitoring and log forwarding
+Resolution
+1. Check the forwarding status page, which shows the last successful delivery and any error returned by the destination.
+2. Expect a delay of up to two minutes on metrics, since they are aggregated before being sent.
+3. Apply a level filter at source so that debug output is not forwarded, which is usually the reason volume is higher than expected.
+4. Verify the destination credential separately if delivery has stopped entirely, as expired credentials are the most common cause.","[DOC-INT-002#symptoms] Third party monitoring and log forwarding
+Symptoms
+- Logs are not arriving at the external destination
+- Metrics are delayed compared with the console
+- Forwarded volume is higher than expected
+
+[DOC-INT-002#notes] Third party monitoring and log forwarding
+Notes
+Forwarding pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy.
+
+[DOC-INT-002#common-causes] Third party monitoring and log forwarding
+Common causes
+- The destination rejected the payload and forwarding paused
+- Aggregation introduces a delay before metrics are forwarded
+- Debug-level logs are being forwarded along with the rest",Y,
+R08,5,,"A common cause is that the destination rejected the payload, which triggers the pause.",DOC-INT-002#common-causes,"Third party monitoring and log forwarding
+Common causes
+- The destination rejected the payload and forwarding paused
+- Aggregation introduces a delay before metrics are forwarded
+- Debug-level logs are being forwarded along with the rest","[DOC-INT-002#symptoms] Third party monitoring and log forwarding
+Symptoms
+- Logs are not arriving at the external destination
+- Metrics are delayed compared with the console
+- Forwarded volume is higher than expected
+
+[DOC-INT-002#notes] Third party monitoring and log forwarding
+Notes
+Forwarding pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy.
+
+[DOC-INT-002#resolution] Third party monitoring and log forwarding
+Resolution
+1. Check the forwarding status page, which shows the last successful delivery and any error returned by the destination.
+2. Expect a delay of up to two minutes on metrics, since they are aggregated before being sent.
+3. Apply a level filter at source so that debug output is not forwarded, which is usually the reason volume is higher than expected.
+4. Verify the destination credential separately if delivery has stopped entirely, as expired credentials are the most common cause.",Y,
+R09,1,"
+Since late last night I cannot get into the console at all. My colleague on the same team signs in without any trouble, so it does not appear to be a general outage. Could you check whether something is wrong with my account specifically?",The console may be returning an “Invalid credentials” message even if the password is correct.,DOC-AUTH-001#symptoms,"Resolving invalid credential errors on login
+Symptoms
+- The console returns 'Invalid credentials' despite a correct password
+- Login succeeds in one browser but fails in another
+- The CLI reports authentication failure after a working period","[DOC-AUTH-001#resolution] Resolving invalid credential errors on login
+Resolution
+1. Confirm whether the account is locked by checking the security page of the console. A locked account displays a red banner and unlocks automatically after thirty minutes.
+2. Clear cookies for the CloudServe domain, or open a private browsing window, then attempt the login again.
+3. If the CLI is failing, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token.
+4. Where the account remains locked and the customer needs immediate access, an administrator on the account can release the lock from the team members page.",Y,
+R09,2,,Check whether the account is locked by viewing the security page of the console; a locked account shows a red banner and unlocks automatically after thirty minutes.,DOC-AUTH-001#resolution,"Resolving invalid credential errors on login
+Resolution
+1. Confirm whether the account is locked by checking the security page of the console. A locked account displays a red banner and unlocks automatically after thirty minutes.
+2. Clear cookies for the CloudServe domain, or open a private browsing window, then attempt the login again.
+3. If the CLI is failing, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token.
+4. Where the account remains locked and the customer needs immediate access, an administrator on the account can release the lock from the team members page.","[DOC-AUTH-001#symptoms] Resolving invalid credential errors on login
+Symptoms
+- The console returns 'Invalid credentials' despite a correct password
+- Login succeeds in one browser but fails in another
+- The CLI reports authentication failure after a working period",Y,
+R09,3,,"Clear cookies for the CloudServe domain or open a private browsing window, then try logging in again.",DOC-AUTH-001#resolution,"Resolving invalid credential errors on login
+Resolution
+1. Confirm whether the account is locked by checking the security page of the console. A locked account displays a red banner and unlocks automatically after thirty minutes.
+2. Clear cookies for the CloudServe domain, or open a private browsing window, then attempt the login again.
+3. If the CLI is failing, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token.
+4. Where the account remains locked and the customer needs immediate access, an administrator on the account can release the lock from the team members page.","[DOC-AUTH-001#symptoms] Resolving invalid credential errors on login
+Symptoms
+- The console returns 'Invalid credentials' despite a correct password
+- Login succeeds in one browser but fails in another
+- The CLI reports authentication failure after a working period",Y,
+R09,4,,"If using the CLI, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token.",DOC-AUTH-001#resolution,"Resolving invalid credential errors on login
+Resolution
+1. Confirm whether the account is locked by checking the security page of the console. A locked account displays a red banner and unlocks automatically after thirty minutes.
+2. Clear cookies for the CloudServe domain, or open a private browsing window, then attempt the login again.
+3. If the CLI is failing, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token.
+4. Where the account remains locked and the customer needs immediate access, an administrator on the account can release the lock from the team members page.","[DOC-AUTH-001#symptoms] Resolving invalid credential errors on login
+Symptoms
+- The console returns 'Invalid credentials' despite a correct password
+- Login succeeds in one browser but fails in another
+- The CLI reports authentication failure after a working period",Y,
+R09,5,,An administrator can release a locked account from the team members page if immediate access is needed.,DOC-AUTH-001#resolution,"Resolving invalid credential errors on login
+Resolution
+1. Confirm whether the account is locked by checking the security page of the console. A locked account displays a red banner and unlocks automatically after thirty minutes.
+2. Clear cookies for the CloudServe domain, or open a private browsing window, then attempt the login again.
+3. If the CLI is failing, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token.
+4. Where the account remains locked and the customer needs immediate access, an administrator on the account can release the lock from the team members page.","[DOC-AUTH-001#symptoms] Resolving invalid credential errors on login
+Symptoms
+- The console returns 'Invalid credentials' despite a correct password
+- Login succeeds in one browser but fails in another
+- The CLI reports authentication failure after a working period",Y,
+R10,1,"
+There are charges on our invoice for a service I do not believe we use. Could you explain what these relate to?",The invoice may show higher charges because usage-based charges accrued beyond the plan allowance.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R10,2,,Charges can also appear if a resource was left running in a non‑production environment such as staging or development.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R10,3,,The billing period on the invoice runs from the anniversary of the subscription date rather than the first of the month.,"DOC-BILL-001#common-causes, DOC-BILL-001#resolution","Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.","[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R10,4,,"To see what each charge relates to, open the usage breakdown for the period, which itemises charges by service and by environment.",DOC-BILL-001#resolution,"Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.","[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R10,5,,"Invoices are finalised three days after the period ends, and any adjustments requested before finalisation appear on the same invoice.",DOC-BILL-001#notes,"Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.","[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-002#resolution] Changing plans, and how proration is calculated
+Resolution
+1. Upgrades take effect immediately and are prorated for the days remaining in the period. The invoice shows the calculation as a separate line.
+2. Downgrades take effect at the start of the next period so that paid-for capacity is not lost. The scheduled change appears on the subscription page.
+3. Credits from a downgrade or an adjustment are applied against the next invoice by default rather than refunded to the payment method.
+4. Where a refund rather than a credit is required, an account owner should raise the request within thirty days of the invoice.",Y,
+R11,1,"Need to rotate an exposed key
+one of our production keys start returning 401 at around last Friday without any change on our side. Other keys against same account still working. waiting for your reply.",A previously working key returning 401 Unauthorized is a known symptom.,DOC-AUTH-004#symptoms,"API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure","[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-AUTH-004#resolution] API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.
+
+[DOC-SEC-002#symptoms] Handling exposed secrets and credential rotation
+Symptoms
+- A key has been committed to a repository
+- A secret appears in application logs
+- A third party has reported finding a credential
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R11,2,,"This can be caused by the key being revoked, expired, or having an insufficient scope.",DOC-AUTH-004#common-causes,"API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-AUTH-004#resolution] API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.
+
+[DOC-SEC-002#symptoms] Handling exposed secrets and credential rotation
+Symptoms
+- A key has been committed to a repository
+- A secret appears in application logs
+- A third party has reported finding a credential
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R11,3,,"First, check the API keys page for the key’s status and expiry, where revoked and expired keys are listed with dates and the acting user.",DOC-AUTH-004#resolution,"API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-SEC-002#symptoms] Handling exposed secrets and credential rotation
+Symptoms
+- A key has been committed to a repository
+- A secret appears in application logs
+- A third party has reported finding a credential
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R11,4,,Then review the scopes attached to the key to ensure they allow the required endpoints.,DOC-AUTH-004#resolution,"API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-SEC-002#symptoms] Handling exposed secrets and credential rotation
+Symptoms
+- A key has been committed to a repository
+- A secret appears in application logs
+- A third party has reported finding a credential
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R11,5,,"To rotate without downtime, create a replacement key, deploy it, confirm traffic has moved, and then revoke the old key.",DOC-AUTH-004#resolution,"API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-SEC-002#symptoms] Handling exposed secrets and credential rotation
+Symptoms
+- A key has been committed to a repository
+- A secret appears in application logs
+- A third party has reported finding a credential
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R11,6,,"If the key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.",DOC-AUTH-004#resolution,"API key rotation and scope management
+Resolution
+1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.
+2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.
+3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.
+4. If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window.","[DOC-AUTH-004#symptoms] API key rotation and scope management
+Symptoms
+- A previously working key returns 401 Unauthorized
+- A key works for some endpoints and not others
+- A key needs replacing after accidental exposure
+
+[DOC-AUTH-004#common-causes] API key rotation and scope management
+Common causes
+- The key was revoked or reached its configured expiry
+- The key was issued with a scope that excludes the endpoint being called
+- The key belongs to a deleted user and was removed with the account
+
+[DOC-SEC-002#symptoms] Handling exposed secrets and credential rotation
+Symptoms
+- A key has been committed to a repository
+- A secret appears in application logs
+- A third party has reported finding a credential
+
+[DOC-AUTH-004#notes] API key rotation and scope management
+Notes
+Keys issued to individual users are removed when that user is deleted. Use service accounts for anything running in production.",Y,
+R12,1,"Config differs between environments
+Where should secrets be stored so they do not appear in the logs? At the moment ours are being printed at startup and I am not comfortable with that.",Store anything sensitive as a secret rather than a variable; secrets are masked in logs and are not readable through the API after creation.,DOC-DEPLOY-004#resolution,"Configuring environment variables and secrets
+Resolution
+1. Check the scope at which the variable was defined. Service scope overrides project scope, and project scope overrides organisation defaults.
+2. Store anything sensitive as a secret rather than a variable. Secrets are masked in logs and are not readable through the API after creation.
+3. Review the environment overrides page, which lists values that differ from the defaults for each environment.
+4. Redeploy after changing configuration. Running containers do not pick up new values without a restart.","[DOC-DEPLOY-004#notes] Configuring environment variables and secrets
+Notes
+A secret that has been printed to logs should be treated as exposed and rotated, even if the logs are private.
+
+[DOC-DEPLOY-004#symptoms] Configuring environment variables and secrets
+Symptoms
+- The application cannot read a variable that appears to be set
+- A secret value appears in plain text in the logs
+- Configuration differs between environments unexpectedly
+
+[DOC-SEC-002#common-causes] Handling exposed secrets and credential rotation
+Common causes
+- Configuration was committed rather than referenced from the environment
+- The application prints its configuration during startup
+- A key was shared in a support ticket or a chat message
+
+[DOC-DEPLOY-004#common-causes] Configuring environment variables and secrets
+Common causes
+- The variable was set at project scope but read at service scope
+- The application logs its configuration at startup
+- An environment override exists that is not visible on the main settings page",Y,
+R12,2,,"A secret that has been printed to logs should be treated as exposed and rotated, even if the logs are private.",DOC-DEPLOY-004#notes,"Configuring environment variables and secrets
+Notes
+A secret that has been printed to logs should be treated as exposed and rotated, even if the logs are private.","[DOC-DEPLOY-004#resolution] Configuring environment variables and secrets
+Resolution
+1. Check the scope at which the variable was defined. Service scope overrides project scope, and project scope overrides organisation defaults.
+2. Store anything sensitive as a secret rather than a variable. Secrets are masked in logs and are not readable through the API after creation.
+3. Review the environment overrides page, which lists values that differ from the defaults for each environment.
+4. Redeploy after changing configuration. Running containers do not pick up new values without a restart.
+
+[DOC-DEPLOY-004#symptoms] Configuring environment variables and secrets
+Symptoms
+- The application cannot read a variable that appears to be set
+- A secret value appears in plain text in the logs
+- Configuration differs between environments unexpectedly
+
+[DOC-SEC-002#common-causes] Handling exposed secrets and credential rotation
+Common causes
+- Configuration was committed rather than referenced from the environment
+- The application prints its configuration during startup
+- A key was shared in a support ticket or a chat message
+
+[DOC-DEPLOY-004#common-causes] Configuring environment variables and secrets
+Common causes
+- The variable was set at project scope but read at service scope
+- The application logs its configuration at startup
+- An environment override exists that is not visible on the main settings page",Y,
+R13,1,"Webhooks not arriving
+Signature verification fails for every delivery. We are computing the signature exactly as the documentation describes, over the parsed body.",Signature verification fails is listed as a symptom of webhook delivery issues.,DOC-API-003#symptoms,"Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails","[DOC-API-003#common-causes] Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes
+
+[DOC-API-003#resolution] Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R13,2,,A common cause is computing the signature over a parsed body rather than the raw bytes.,DOC-API-003#common-causes,"Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes","[DOC-API-003#symptoms] Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails
+
+[DOC-API-003#resolution] Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R13,3,,The resolution is to compute the signature over the raw request body before any parsing.,DOC-API-003#resolution,"Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.","[DOC-API-003#symptoms] Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails
+
+[DOC-API-003#common-causes] Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R13,4,,Re‑serialising JSON changes the bytes and invalidates the signature.,DOC-API-003#resolution,"Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.","[DOC-API-003#symptoms] Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails
+
+[DOC-API-003#common-causes] Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R14,1,"Webhooks not arriving
+Signature verification fails for every delivery. We are computing the signature exactly as the documentation describes, over the parsed body.",Signature verification fails is listed as a symptom of webhook delivery issues.,DOC-API-003#symptoms,"Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails","[DOC-API-003#common-causes] Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes
+
+[DOC-API-003#resolution] Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R14,2,,A common cause is computing the signature over a parsed body rather than the raw bytes.,DOC-API-003#common-causes,"Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes","[DOC-API-003#symptoms] Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails
+
+[DOC-API-003#resolution] Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R14,3,,The resolution is to compute the signature over the raw request body before any parsing.,DOC-API-003#resolution,"Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.","[DOC-API-003#symptoms] Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails
+
+[DOC-API-003#common-causes] Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R14,4,,Re‑serialising JSON changes the bytes and invalidates the signature.,DOC-API-003#resolution,"Webhook delivery, retries and signature verification
+Resolution
+1. Check the webhook delivery log, which records every attempt with the response status and body for the last seven days.
+2. Return 2xx as quickly as possible and process the event asynchronously. Deliveries time out after five seconds.
+3. Compute the signature over the raw request body before any parsing. Re-serialising JSON changes the bytes and invalidates the signature.
+4. Make your handler idempotent using the event identifier. At-least-once delivery means duplicates are expected rather than exceptional.","[DOC-API-003#symptoms] Webhook delivery, retries and signature verification
+Symptoms
+- Webhooks are not arriving at the configured endpoint
+- The same event is delivered more than once
+- Signature verification fails
+
+[DOC-API-003#common-causes] Webhook delivery, retries and signature verification
+Common causes
+- The endpoint returned a non-2xx status and delivery is being retried
+- The endpoint responded too slowly and the delivery timed out
+- The signature was computed over a parsed body rather than the raw bytes
+
+[DOC-API-003#notes] Webhook delivery, retries and signature verification
+Notes
+Failed deliveries are retried with backoff for twenty-four hours, after which the endpoint is disabled and the account is notified.
+
+[DOC-AUTH-003#common-causes] Single sign-on configuration with SAML providers
+Common causes
+- The assertion consumer service URL does not match the value registered with CloudServe
+- The email attribute in the assertion does not match the CloudServe account email
+- Just-in-time provisioning is disabled on the connection",Y,
+R15,1,"Invoice higher than expected
+bill is very high this month. i not understand the charge. please explain what is this.",The invoice being higher than expected is listed as a symptom.,DOC-BILL-001#symptoms,"Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month","[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-002#common-causes] Changing plans, and how proration is calculated
+Common causes
+- The upgrade was prorated across the remainder of the billing period
+- Downgrades are applied at the end of the current period rather than immediately
+- The credit was applied to the next invoice rather than refunded",Y,
+R15,2,,Common causes include usage‑based charges that exceed the plan allowance.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-002#common-causes] Changing plans, and how proration is calculated
+Common causes
+- The upgrade was prorated across the remainder of the billing period
+- Downgrades are applied at the end of the current period rather than immediately
+- The credit was applied to the next invoice rather than refunded",Y,
+R15,3,,Another common cause is a resource left running in a non‑production environment.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-002#common-causes] Changing plans, and how proration is calculated
+Common causes
+- The upgrade was prorated across the remainder of the billing period
+- Downgrades are applied at the end of the current period rather than immediately
+- The credit was applied to the next invoice rather than refunded",Y,
+R15,4,,The billing period may run from the subscription anniversary rather than the calendar month.,DOC-BILL-001#common-causes,"Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month","[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-001#resolution] Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-002#common-causes] Changing plans, and how proration is calculated
+Common causes
+- The upgrade was prorated across the remainder of the billing period
+- Downgrades are applied at the end of the current period rather than immediately
+- The credit was applied to the next invoice rather than refunded",Y,
+R15,5,,"To investigate, open the usage breakdown for the period to see charges by service and environment.",DOC-BILL-001#resolution,"Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.","[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-002#common-causes] Changing plans, and how proration is calculated
+Common causes
+- The upgrade was prorated across the remainder of the billing period
+- Downgrades are applied at the end of the current period rather than immediately
+- The credit was applied to the next invoice rather than refunded",Y,
+R15,6,,"Check the billing period dates at the top of the invoice, which run from the subscription anniversary.",DOC-BILL-001#resolution,"Understanding your invoice and usage breakdown
+Resolution
+1. Open the usage breakdown for the period, which itemises charges by service and by environment.
+2. Look for resources in staging or development environments, which are billed at the same rate as production.
+3. Check the billing period dates at the top of the invoice. The period runs from the anniversary of the subscription date.
+4. Set a usage alert on the billing page so that unexpected accrual is noticed during the period rather than at the end of it.","[DOC-BILL-001#symptoms] Understanding your invoice and usage breakdown
+Symptoms
+- The invoice is higher than expected
+- Charges appear for a service that is not in use
+- The billing period does not align with the calendar month
+
+[DOC-BILL-001#common-causes] Understanding your invoice and usage breakdown
+Common causes
+- Usage-based charges accrued beyond the plan allowance
+- A resource was left running in a non-production environment
+- The billing period runs from the subscription date rather than the first of the month
+
+[DOC-BILL-001#notes] Understanding your invoice and usage breakdown
+Notes
+Invoices are finalised three days after the period ends. Adjustments requested before finalisation appear on the same invoice.
+
+[DOC-BILL-002#common-causes] Changing plans, and how proration is calculated
+Common causes
+- The upgrade was prorated across the remainder of the billing period
+- Downgrades are applied at the end of the current period rather than immediately
+- The credit was applied to the next invoice rather than refunded",Y,

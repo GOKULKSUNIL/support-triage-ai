@@ -1,0 +1,107 @@
+review_id,ticket,reply,satisfaction,comment
+R01,"
+We are tightening permissions after a review and I want to understand how group membership interacts with directly assigned roles.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+A group membership grants broader access than the direct role suggests. [DOC-ACCT-001] The effective permissions view resolves direct roles and group memberships together. [DOC-ACCT-001] Prefer group membership to direct role assignment so that access can be reviewed in one place. [DOC-ACCT-001]
+
+Sources:
+- [DOC-ACCT-001] Managing team members, roles and permissions",4,
+R02,"
+The service is noticeably slow during our afternoon peak and fine the rest of the day. We have autoscaling enabled so I expected it to cope.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+One common cause of elevated latency is that the instance count is not scaling with the load pattern. [DOC-PERF-001] You should compare median and 95th percentile latency on the metrics page; a large gap indicates contention or queueing. [DOC-PERF-001] Check memory utilisation across instances; sustained utilisation above eighty per cent can cause latency before failures appear. [DOC-PERF-001] Review the dependency timing breakdown on the trace view to see if time is spent in your service or a downstream dependency. [DOC-PERF-001] Verify that the service is not already at its configured maximum instance count, as scaling stops there regardless of load. [DOC-PERF-002] Consider adjusting the autoscaling policy to use a faster‑responding metric such as request count and set a minimum instance count above zero for latency‑sensitive services. [DOC-PERF-002]
+
+Sources:
+- [DOC-PERF-001] Diagnosing elevated response latency
+- [DOC-PERF-002] Autoscaling behaviour and instance limits",5,
+R03,"
+every deployment fails at health check stage. i am having increase timeout twice already and it makes no difference. kindly check and revert.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+The deployment reaches running and then rolls back, and logs show repeated health check timeouts. [DOC-DEPLOY-001] A common cause is that the health endpoint takes longer to respond than the configured timeout. [DOC-DEPLOY-001] Another common cause is that the container listens on a different port than the service declares. [DOC-DEPLOY-001] Resolution steps include confirming the container is listening on the declared port, increasing the initial delay if the application needs time to warm up, comparing required environment variables, and inspecting the container logs from the failed revision. [DOC-DEPLOY-001] A health check must return within the timeout using only local state. [DOC-DEPLOY-001]
+
+Sources:
+- [DOC-DEPLOY-001] Container deployments failing during the health check phase",4,
+R04,"Need to roll back the latest release
+How do I revert to an earlier revision? The release we put out this morning is causing errors and I would rather roll back than try to fix forward.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+A release has introduced errors and must be reverted. [DOC-DEPLOY-002] Open the revisions page for the service and identify the last revision that was healthy. [DOC-DEPLOY-002] Select roll back on that revision; traffic moves within roughly thirty seconds and no rebuild takes place. [DOC-DEPLOY-002] If the release included a database migration, roll the migration back before the service, or the older code will encounter a schema it does not expect. [DOC-DEPLOY-002] Record the incident and the reason for the rollback before deploying a fix. [DOC-DEPLOY-002] Rollback restores the container image and its configuration together, but does not restore data. [DOC-DEPLOY-002]
+
+Sources:
+- [DOC-DEPLOY-002] Rolling back a failed release",5,
+R05,"API key returning 401
+One of our engineers pushed a key to a public repository by mistake. We need to replace it without taking the service down. What is the correct order of operations?","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key. [DOC-AUTH-004] If a key has been exposed publicly, revoke it immediately rather than waiting for the rotation window. [DOC-AUTH-004]
+
+Sources:
+- [DOC-AUTH-004] API key rotation and scope management",4,
+R06,"Question about this month's charges
+There are charges on our invoice for a service I do not believe we use. Could you explain what these relate to?","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+The invoice shows higher charges because usage‑based charges can accrue beyond the plan allowance. [DOC-BILL-001] Charges can also appear if a resource was left running in a non‑production (staging or development) environment. [DOC-BILL-001] The billing period on the invoice runs from the anniversary of your subscription date rather than the calendar month. [DOC-BILL-001] You can open the usage breakdown for the period to see charges itemised by service and environment. [DOC-BILL-001] Invoices are finalised three days after the period ends, and any adjustments requested before finalisation appear on the same invoice. [DOC-BILL-001]
+
+Sources:
+- [DOC-BILL-001] Understanding your invoice and usage breakdown",3,It gives a general list not a answer to question
+R07,"How do I page through large results
+when i do pagination some record coming two time and some missing. what is correct way?","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+Iterating through results can miss or duplicate records. [DOC-API-002] This can happen if the cursor from the previous response was not passed to the next request, if offset pagination was used against a changing collection, or if the page size requested exceeds the maximum. [DOC-API-002] Use cursor pagination for anything that may change while you iterate. [DOC-API-002] Pass the next_cursor value from each response as the cursor parameter of the following request, and stop when it is null. [DOC-API-002] Keep page size at or below two hundred. [DOC-API-002] Cursors expire after one hour; long‑running iterations should handle expiry by restarting from a recorded checkpoint. [DOC-API-002]
+
+Sources:
+- [DOC-API-002] Pagination and handling large result sets",5,
+R08,"Log forwarding stopped working
+log forwarding to our external system stop two days ago and not resumed by itself. destination is healthy as we know. kindly check and revert.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+Logs not arriving at the external destination is a known symptom of forwarding issues. [DOC-INT-002] Forwarding automatically pauses after one hour of consecutive failures and must be resumed manually once the destination is healthy. [DOC-INT-002] You should check the forwarding status page to see the last successful delivery and any error returned by the destination. [DOC-INT-002] If delivery has stopped entirely, verify the destination credentials, as expired credentials are the most common cause. [DOC-INT-002] A common cause is that the destination rejected the payload, which triggers the pause. [DOC-INT-002]
+
+Sources:
+- [DOC-INT-002] Third party monitoring and log forwarding",3,Doesn’t give a solution
+R09,"
+Since late last night I cannot get into the console at all. My colleague on the same team signs in without any trouble, so it does not appear to be a general outage. Could you check whether something is wrong with my account specifically?","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+The console may be returning an “Invalid credentials” message even if the password is correct. [DOC-AUTH-001] Check whether the account is locked by viewing the security page of the console; a locked account shows a red banner and unlocks automatically after thirty minutes. [DOC-AUTH-001] Clear cookies for the CloudServe domain or open a private browsing window, then try logging in again. [DOC-AUTH-001] If using the CLI, run `cloudserve auth logout` followed by `cloudserve auth login` to discard the cached token. [DOC-AUTH-001] An administrator can release a locked account from the team members page if immediate access is needed. [DOC-AUTH-001]
+
+Sources:
+- [DOC-AUTH-001] Resolving invalid credential errors on login",4,
+R10,"
+There are charges on our invoice for a service I do not believe we use. Could you explain what these relate to?","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+The invoice may show higher charges because usage-based charges accrued beyond the plan allowance. [DOC-BILL-001] Charges can also appear if a resource was left running in a non‑production environment such as staging or development. [DOC-BILL-001] The billing period on the invoice runs from the anniversary of the subscription date rather than the first of the month. [DOC-BILL-001] To see what each charge relates to, open the usage breakdown for the period, which itemises charges by service and by environment. [DOC-BILL-001] Invoices are finalised three days after the period ends, and any adjustments requested before finalisation appear on the same invoice. [DOC-BILL-001]
+
+Sources:
+- [DOC-BILL-001] Understanding your invoice and usage breakdown",4,
+R11,"Need to rotate an exposed key
+one of our production keys start returning 401 at around last Friday without any change on our side. Other keys against same account still working. waiting for your reply.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+A previously working key returning 401 Unauthorized is a known symptom. [DOC-AUTH-004] This can be caused by the key being revoked, expired, or having an insufficient scope. [DOC-AUTH-004] First, check the API keys page for the key’s status and expiry, where revoked and expired keys are listed with dates and the acting user. [DOC-AUTH-004] Then review the scopes attached to the key to ensure they allow the required endpoints. [DOC-AUTH-004] To rotate without downtime, create a replacement key, deploy it, confirm traffic has moved, and then revoke the old key. [DOC-AUTH-004] If the key has been exposed publicly, revoke it immediately rather than waiting for the rotation window. [DOC-AUTH-004]
+
+Sources:
+- [DOC-AUTH-004] API key rotation and scope management",4,
+R12,"Config differs between environments
+Where should secrets be stored so they do not appear in the logs? At the moment ours are being printed at startup and I am not comfortable with that.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+Store anything sensitive as a secret rather than a variable; secrets are masked in logs and are not readable through the API after creation. [DOC-DEPLOY-004] A secret that has been printed to logs should be treated as exposed and rotated, even if the logs are private. [DOC-DEPLOY-004]
+
+Sources:
+- [DOC-DEPLOY-004] Configuring environment variables and secrets",5,
+R13,"Webhooks not arriving
+Signature verification fails for every delivery. We are computing the signature exactly as the documentation describes, over the parsed body.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+Signature verification fails is listed as a symptom of webhook delivery issues. [DOC-API-003] A common cause is computing the signature over a parsed body rather than the raw bytes. [DOC-API-003] The resolution is to compute the signature over the raw request body before any parsing. [DOC-API-003] Re‑serialising JSON changes the bytes and invalidates the signature. [DOC-API-003]
+
+Sources:
+- [DOC-API-003] Webhook delivery, retries and signature verification",4,
+R14,"Webhooks not arriving
+Signature verification fails for every delivery. We are computing the signature exactly as the documentation describes, over the parsed body.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+Signature verification fails is listed as a symptom of webhook delivery issues. [DOC-API-003] A common cause is computing the signature over a parsed body rather than the raw bytes. [DOC-API-003] The resolution is to compute the signature over the raw request body before any parsing. [DOC-API-003] Re‑serialising JSON changes the bytes and invalidates the signature. [DOC-API-003]
+
+Sources:
+- [DOC-API-003] Webhook delivery, retries and signature verification",4,
+R15,"Invoice higher than expected
+bill is very high this month. i not understand the charge. please explain what is this.","This reply was drafted automatically from our documentation. Reply to this message to reach a person.
+
+The invoice being higher than expected is listed as a symptom. [DOC-BILL-001] Common causes include usage‑based charges that exceed the plan allowance. [DOC-BILL-001] Another common cause is a resource left running in a non‑production environment. [DOC-BILL-001] The billing period may run from the subscription anniversary rather than the calendar month. [DOC-BILL-001] To investigate, open the usage breakdown for the period to see charges by service and environment. [DOC-BILL-001] Check the billing period dates at the top of the invoice, which run from the subscription anniversary. [DOC-BILL-001]
+
+Sources:
+- [DOC-BILL-001] Understanding your invoice and usage breakdown",4,
