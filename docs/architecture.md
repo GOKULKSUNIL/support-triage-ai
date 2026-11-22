@@ -125,7 +125,10 @@ may be sent.
 | `src/api.py` | FastAPI: `POST /tickets` (one ticket through the same pipeline), `GET /health` (kill-switch state, models), `GET /metrics` (Prometheus) |
 | `monitoring/` | Prometheus config, Grafana data source and dashboard (tickets by channel/outcome, auto vs escalated, latency p50/p95, guardrail blocks, confidence distribution), start script |
 | `evaluation/harness.py` | One command over any ticket file; writes results and report |
-| `evaluation/metrics.py` | Volume, business, technical and governance figures |
+| `src/monitoring.py` | The five Prometheus metrics, shared by the API and the harness |
+| `evaluation/metrics.py` | Volume, business, technical and governance figures, with the Evaluation Framework results table; `--run` rebuilds a saved run's report |
+| `evaluation/fairness.py` | Fairness audit: outcomes by tier, fluency, length, region and channel, with 95% ranges, against the 5-point tolerance (NFR-06) |
+| `evaluation/human_review.py` | Draws a random sample of sent replies for two assessors and scores citation accuracy, hallucination rate, satisfaction and agreement |
 | `prompts/` | Prompt texts with versions and the register |
 
 ## 5. Data and storage
@@ -174,6 +177,9 @@ the network.
 | `RETRIEVAL_TOP_K` | 5 | Passages retrieved per ticket |
 | `EMBEDDING_MODEL` | all-MiniLM-L6-v2 | Local embedding model |
 | `CHROMA_PATH`, `DATABASE_URL` | `./storage/...` | Local stores |
+| `CLASSIFIER_PATH` | `./storage/classifier.joblib` | Trained classifier (rebuilt if missing) |
+| `LLM_TIMEOUT`, `LLM_CACHE_DIR` | 20 s, `./cache/llm` | Model call timeout; folder for cached responses |
+| `METRICS_PORT` | blank (off) | Optional: the harness serves metrics on this port during a run |
 
 The protected-category rule and the guardrails have no configuration on
 purpose: they cannot be switched off.
