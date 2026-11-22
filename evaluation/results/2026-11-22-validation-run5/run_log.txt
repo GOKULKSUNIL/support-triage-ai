@@ -1,0 +1,8 @@
+Run 5: validation (80 tickets), recorded for the video.
+Started 2026-11-22T19:14:10Z, finished 2026-11-22T19:14:14Z, version ed075c1, threshold 0.8.
+Command: METRICS_PORT=8001 .venv/bin/python -m evaluation.harness --input data/validation_tickets.json --output evaluation/results/2026-11-22-validation-run5
+Run from the working folder (not a fresh clone), feeding the live dashboard on port 8001.
+Result: 80 in / 80 out / 80 log rows, reconciled=True.
+Model calls: 148, of which 147 were answered from the response cache: the same 80 tickets
+had been run with the same prompt versions in run 4, so the decisions are identical to run 4 (80 of 80).
+This run demonstrates the unattended run and the cache; it is not an independent measurement.
