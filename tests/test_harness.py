@@ -90,3 +90,18 @@ def test_t11a_report_has_all_four_groups():
 def test_reconciliation_mismatch_is_reported():
     m = compute([_result("A", "x", "escalate", "x", "escalate")], log_rows=0, tickets_in=1)
     assert not m["reconciled"]
+
+
+def test_wrong_automatic_answers_and_sent_reply_scan_match_a_hand_count():
+    ok = _result("A", "billing_query", "auto_respond", "billing_query", "auto_respond",
+                 docs=["DOC-BILL-001"], sources=["DOC-BILL-001#resolution"])
+    routed_wrong = _result("B", "billing_query", "auto_respond", "billing_query", "escalate")
+    wrong_doc = _result("C", "billing_query", "auto_respond", "billing_query", "auto_respond",
+                        docs=["DOC-BILL-002"], sources=["DOC-BILL-001#resolution"])
+    wrong_doc["reply"] = {"status": "sent", "text": "Write to jane@example.com.",
+                          "sentences": [{"text": "x", "sources": ["DOC-BILL-001#resolution"]}]}
+    m = compute([ok, routed_wrong, wrong_doc], 3, 3)
+    assert m["wrong_should_escalate"] == ["B"] and m["wrong_article"] == ["C"] and m["wrong_any"] == ["B", "C"]
+    assert m["private_data_sent"] == ["C"] and m["availability"] == 1.0
+    assert "Wrong automatic answers" in render(m, {"input": "x", "started": "s", "finished": "f",
+                                                   "version": "v", "threshold": 0.8})
