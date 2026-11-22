@@ -61,8 +61,9 @@ may be sent.
  ┌──────────┐  checks in this order; first hit escalates
  │  route   │  1 unreadable ticket          4 confidence < 0.80
  └───┬──────┘  2 protected category (FR-05) 5 no passage above 0.40
-     │         3 feature / unclear request  else → auto_respond
-     │
+     │         3 feature / unclear request  6 instruction in the ticket
+     │                                        (instruction integrity, recorded)
+     │                                      else → auto_respond
      ├── escalate ──────────────────────────────────────────────┐
      │                                                          │
      ▼ auto_respond                                             │
@@ -75,6 +76,9 @@ may be sent.
  │ validate │    API key, another customer's ID                  │
  └───┬──────┘  2 grounding (PR-02): every sentence supported?    │
      │           check can't run → blocked (fail closed)         │
+     │         3 tone and scope: refund, credit, guarantee, a    │
+     │           fix or a date not in the cited passage, or      │
+     │           marked a commitment by PR-02                    │
      │ pass                                   blocked ──────────┤
      ▼                                                          ▼
   SENT: label + reply + [DOC-ID] citations          ┌──────────────────┐
@@ -98,7 +102,8 @@ may be sent.
 | route | Classifier sure enough | Calibrated confidence ≥ 0.80 (`CONFIDENCE_THRESHOLD`) | FR-04 |
 | route | An article matches | At least one passage ≥ 0.40 (`RELEVANCE_THRESHOLD`) | FR-03 |
 | draft | Reply is usable | Valid JSON, status answered, every citation retrieved, ≥ 1 citation | FR-06 |
-| validate | Reply is safe | No private data; every sentence supported; fail closed | FR-07 |
+| route | Ticket is not trying to instruct the system | No phrase such as "ignore previous instructions", "system prompt", "developer mode"; a match escalates and the words are recorded in the guardrail checks | FR-07 (Stage 5 change) |
+| validate | Reply is safe | No private data; every sentence supported; no promise (refund, credit, guarantee, fix, date) unless the cited passage says it; fail closed | FR-07 |
 | escalate | Queue order | P1 security or compromise; P2 outage topic or predicted high urgency; P3 other | FR-09 (Stage 5 addition) |
 | sent reply | Customer knows it is automated | Fixed label added by code | FR-13 |
 
@@ -113,7 +118,7 @@ may be sent.
 | `src/route.py` | Protected rule, routing decision, escalation priority |
 | `src/llm.py` | Prompt loading, response cache, timeout, rate-limit wait, fallback provider |
 | `src/generate.py` | PR-01 drafting, citation checks, rendering, automated-reply label |
-| `src/guardrails.py` | Private-data check and PR-02 grounding check |
+| `src/guardrails.py` | Instruction-integrity check on the ticket; private-data, PR-02 grounding and tone-and-scope checks on the draft |
 | `src/pipeline.py` | The LangGraph graph tying the steps together; never raises |
 | `src/logging_store.py` | SQLite decision log, customer name and ID masked; kill-switch events |
 | `src/control.py` | Kill switch command: pause, resume, status |

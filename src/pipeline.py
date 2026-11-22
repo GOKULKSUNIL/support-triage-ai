@@ -6,8 +6,9 @@ r"""The ticket pipeline as a LangGraph graph. The harness and the API both call 
                                  |                      v                v
                                  \--escalate-------> escalate <----------/ --> END
 
-A ticket is only sent if routing, drafting (PR-01 + citation checks) and the
-guardrails (private data + PR-02 grounding) all pass; any failure turns it
+A ticket is only sent if routing, the instruction-integrity check on the
+ticket, drafting (PR-01 + citation checks) and the guardrails on the draft
+(private data, PR-02 grounding, tone and scope) all pass; any failure turns it
 into an escalation with the reason. Each node is a thin wrapper around a
 module in src/. `Pipeline.process` never raises, and the decision-log row is
 written in a `finally` path so every ticket has one.
@@ -20,7 +21,7 @@ from langgraph.graph import END, START, StateGraph
 
 from src.classify import Classification, Classifier
 from src.generate import Draft, draft, escalation_packet
-from src.guardrails import Validation, validate
+from src.guardrails import Check, Validation, instruction_integrity, validate
 from src.ingest import Ticket
 from src.llm import LLM
 from src.logging_store import DecisionLog, mask
@@ -33,6 +34,7 @@ class State(TypedDict, total=False):
     classification: Classification
     passages: list[Hit]
     route: Route
+    integrity: Check
     draft: Draft
     validation: Validation
     reply: dict | None
@@ -90,9 +92,14 @@ class Pipeline:
 
     def _route(self, state: State) -> dict:
         r = route(state["ticket"], state["classification"], state["passages"], self.threshold)
+        integrity = instruction_integrity(state["ticket"])  # every ticket, recorded either way
+        if r.action == "auto_respond" and not integrity.passed:
+            r = self._escalated({**state, "route": r},
+                                f"Escalated: guardrail blocked drafting ({integrity.name}: "
+                                f"{integrity.detail}).", ["FR-07"])
         if r.action == "auto_respond":
             r = self._paused({**state, "route": r}) or r
-        return {"route": r}
+        return {"route": r, "integrity": integrity}
 
     def _draft(self, state: State) -> dict:
         d = draft(state["ticket"], state["passages"], self.llm)
@@ -175,8 +182,9 @@ class Pipeline:
             "sources": [p.passage_id for p in state.get("passages", [])],
             "reply": state.get("reply"),
             "packet": state.get("packet"),
-            "guardrail_checks": [c.model_dump() for c in v.checks] if v else [],
-            "blocked": bool(v and v.blocked),
+            "guardrail_checks": [c.model_dump() for c in ([state["integrity"]] if state.get("integrity") else [])
+                                 + (v.checks if v else [])],
+            "blocked": bool(v and v.blocked) or "(instruction_integrity:" in r.reason,
             "llm_calls": [call for call in (d.call if d else None, v.call if v else None,
                                             (state.get("packet") or {}).get("call")) if call],
             "latency_ms": latency_ms,
